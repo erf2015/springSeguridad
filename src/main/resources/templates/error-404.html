@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Entidad</title>
+</head>
+<body>
+
+	<h2>404 - Resource not found</h2>
+
+	<p>The requested resource was not found; template - specific</p>
+
+	<div>
+		<div class="col-sm-2">
+			<a href="#" class="btn btn-outline-success" role="button"
+				th:href="${#httpServletRequest.getContextPath()+'/privado/entidades'}">Regresar</a>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,760 @@
+<div th:fragment="jquery">
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"
+		crossorigin="anonymous"></script>
+	<script type="text/javascript"
+		th:src="@{/assets/demo/datatables-demo.js}"></script>
+	<script type="text/javascript" th:src="@{/js/scripts.js}"></script>
+</div>
+
+<div th:fragment="chart">
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
+		crossorigin="anonymous"></script>
+	<script type="text/javascript"
+		th:src="@{/assets/demo/chart-area-demo.js}"></script>
+	<script type="text/javascript"
+		th:src="@{/assets/demo/chart-bar-demo.js}"></script>
+</div>
+
+<div th:fragment="menu">
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+		<a class="navbar-brand"
+			th:href="${#httpServletRequest.getContextPath()+'/dist/index'}">Inicio</a>
+		<button class="btn btn-link btn-sm order-1 order-lg-0"
+			id="sidebarToggle" href="#">
+			<i class="fas fa-bars"></i>
+		</button>
+		<!-- Navbar Search-->
+		<form
+			class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+			<div class="input-group">
+				<input class="form-control" type="text" placeholder="Search for..."
+					aria-label="Search" aria-describedby="basic-addon2" />
+				<div class="input-group-append">
+					<button class="btn btn-primary" type="button">
+						<i class="fas fa-search"></i>
+					</button>
+				</div>
+			</div>
+		</form>
+		<ul class="navbar-nav ml-auto ml-md-0">
+			<li class="nav-item dropdown"><a
+				class="nav-link dropdown-toggle" id="userDropdown" href="#"
+				role="button" data-toggle="dropdown" aria-haspopup="true"
+				aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+				<div class="dropdown-menu dropdown-menu-right"
+					aria-labelledby="userDropdown">
+					<a class="dropdown-item" href="#">Settings
+						[[${#httpServletRequest.remoteUser}]]!</a> <a class="dropdown-item"
+						href="#">
+						<p th:text="${user}"></p>
+					</a>
+					<div class="dropdown-divider"></div>
+					<form th:action="@{/logout}" method="post">
+						<input class="dropdown-item" type="submit" value="Sign Out" />
+					</form>
+				</div></li>
+		</ul>
+	</nav>
+</div>
+
+<div th:fragment="panelIzquierda">
+	<nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+		<div class="sb-sidenav-menu">
+			<div class="nav">
+				<div class="sb-sidenav-menu-heading">Core</div>
+				<a class="nav-link" href="index.html">
+					<div class="sb-nav-link-icon">
+						<i class="fas fa-tachometer-alt"></i>
+					</div> Dashboard Fragment
+				</a>
+				<div class="sb-sidenav-menu-heading">Interface</div>
+				<a class="nav-link collapsed" href="#" data-toggle="collapse"
+					data-target="#collapseLayouts" aria-expanded="false"
+					aria-controls="collapseLayouts">
+					<div class="sb-nav-link-icon">
+						<i class="fas fa-columns"></i>
+					</div> Layouts
+					<div class="sb-sidenav-collapse-arrow">
+						<i class="fas fa-angle-down"></i>
+					</div>
+				</a>
+				<div class="collapse" id="collapseLayouts"
+					aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+					<nav class="sb-sidenav-menu-nested nav">
+						<a class="nav-link"
+							th:href="${#httpServletRequest.getContextPath()+'/consultaLineas'}">Consulta
+							líneas</a> <a class="nav-link" href="layout-sidenav-light.html">Light
+							Sidenav</a>
+					</nav>
+				</div>
+				<a class="nav-link collapsed" href="#" data-toggle="collapse"
+					data-target="#collapsePages" aria-expanded="false"
+					aria-controls="collapsePages">
+					<div class="sb-nav-link-icon">
+						<i class="fas fa-book-open"></i>
+					</div> Pages
+					<div class="sb-sidenav-collapse-arrow">
+						<i class="fas fa-angle-down"></i>
+					</div>
+				</a>
+				<div class="collapse" id="collapsePages"
+					aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
+					<nav class="sb-sidenav-menu-nested nav accordion"
+						id="sidenavAccordionPages">
+						<a class="nav-link collapsed" href="#" data-toggle="collapse"
+							data-target="#pagesCollapseAuth" aria-expanded="false"
+							aria-controls="pagesCollapseAuth"> Authentication
+							<div class="sb-sidenav-collapse-arrow">
+								<i class="fas fa-angle-down"></i>
+							</div>
+						</a>
+						<div class="collapse" id="pagesCollapseAuth"
+							aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+							<nav class="sb-sidenav-menu-nested nav">
+								<a class="nav-link" href="login.html">Login</a> <a
+									class="nav-link" href="register.html">Register</a> <a
+									class="nav-link" href="password.html">Forgot Password</a>
+							</nav>
+						</div>
+						<a class="nav-link collapsed" href="#" data-toggle="collapse"
+							data-target="#pagesCollapseError" aria-expanded="false"
+							aria-controls="pagesCollapseError"> Error
+							<div class="sb-sidenav-collapse-arrow">
+								<i class="fas fa-angle-down"></i>
+							</div>
+						</a>
+						<div class="collapse" id="pagesCollapseError"
+							aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+							<nav class="sb-sidenav-menu-nested nav">
+								<a class="nav-link" href="401.html">401 Page</a> <a
+									class="nav-link" href="404.html">404 Page</a> <a
+									class="nav-link" href="500.html">500 Page</a>
+							</nav>
+						</div>
+					</nav>
+				</div>
+				<div class="sb-sidenav-menu-heading">Addons</div>
+				<a class="nav-link" href="charts.html">
+					<div class="sb-nav-link-icon">
+						<i class="fas fa-chart-area"></i>
+					</div> Charts
+				</a> <a class="nav-link" href="tables.html">
+					<div class="sb-nav-link-icon">
+						<i class="fas fa-table"></i>
+					</div> Tables
+				</a>
+			</div>
+		</div>
+		<div class="sb-sidenav-footer">
+			<div class="small">Logged in as:</div>
+			Start Bootstrap
+		</div>
+	</nav>
+</div>
+
+<div th:fragment="tarjeta">
+	<div class="row">
+		<div class="col-xl-3 col-md-6">
+			<div class="card bg-primary text-white mb-4">
+				<div class="card-body">Primary Card</div>
+				<div
+					class="card-footer d-flex align-items-center justify-content-between">
+					<a class="small text-white stretched-link" href="#">View
+						Details</a>
+					<div class="small text-white">
+						<i class="fas fa-angle-right"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-3 col-md-6">
+			<div class="card bg-warning text-white mb-4">
+				<div class="card-body">Warning Card</div>
+				<div
+					class="card-footer d-flex align-items-center justify-content-between">
+					<a class="small text-white stretched-link" href="#">View
+						Details</a>
+					<div class="small text-white">
+						<i class="fas fa-angle-right"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-3 col-md-6">
+			<div class="card bg-success text-white mb-4">
+				<div class="card-body">Success Card</div>
+				<div
+					class="card-footer d-flex align-items-center justify-content-between">
+					<a class="small text-white stretched-link" href="#">View
+						Details</a>
+					<div class="small text-white">
+						<i class="fas fa-angle-right"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-3 col-md-6">
+			<div class="card bg-danger text-white mb-4">
+				<div class="card-body">Danger Card</div>
+				<div
+					class="card-footer d-flex align-items-center justify-content-between">
+					<a class="small text-white stretched-link" href="#">View
+						Details</a>
+					<div class="small text-white">
+						<i class="fas fa-angle-right"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div th:fragment="tituloDashboard">
+	<h1 class="mt-4">Bienvenido a la aplicación</h1>
+	<ol class="breadcrumb mb-4">
+		<li class="breadcrumb-item active">Dashboard asdasdasd</li>
+	</ol>
+</div>
+
+<div th:fragment="panelGrafico">
+	<div class="row">
+		<div class="col-xl-6">
+			<div class="card mb-4">
+				<div class="card-header">
+					<i class="fas fa-chart-area mr-1"></i> Area Chart Example
+				</div>
+				<div class="card-body">
+					<canvas id="myAreaChart" width="100%" height="40"></canvas>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-6">
+			<div class="card mb-4">
+				<div class="card-header">
+					<i class="fas fa-chart-bar mr-1"></i> Bar Chart Example
+				</div>
+				<div class="card-body">
+					<canvas id="myBarChart" width="100%" height="40"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div th:fragment="tabla">
+	<div class="card mb-4">
+		<div class="card-header">
+			<i class="fas fa-table mr-1"></i> DataTable Example
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-bordered" id="dataTable" width="100%"
+					cellspacing="0">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Subsistema</th>
+							<th>Fecha Baja</th>
+							<th>Description</th>
+							<th>View</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+							<th>ID</th>
+							<th>Subsistema</th>
+							<th>Fecha Baja</th>
+							<th>Description</th>
+							<th>View</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</tfoot>
+					<tbody>
+						<tr th:each="stm : ${entidades}">
+							<td th:text="${stm.id}">Entidad ID</td>
+							<td th:text="${stm.subsistema}">Entidad subsistema</td>
+							<td th:text="${stm.fechaBaja}">Entidad Fecha Baja</td>
+							<td th:text="${stm.descripcion}">Entidad Description</td>
+							<td><a class="btn btn-outline-primary" href="#"
+								role="button"
+								th:href="${#httpServletRequest.getContextPath()+'/admin/entidad/' + stm.id}">View</a></td>
+							<td><a class="btn btn-outline-success" href="#"
+								role="button"
+								th:href="${#httpServletRequest.getContextPath()+'/admin/entidad/editar/' + stm.id}"
+								sec:authorize="hasAuthority('ADMIN')">Edit</a></td>
+							<td><a class="btn btn-outline-danger" href="#" role="button"
+								th:href="${#httpServletRequest.getContextPath()+'/admin/entidad/eliminar/' + stm.id} "
+								sec:authorize="hasAuthority('ADMIN')">Delete</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div th:fragment="contenidoGeneral">
+	<div class="container-fluid">
+		<div th:replace="dist/fragmentos.html :: tituloDashboard"></div>
+		<!--div th:replace="dist/fragmentos.html :: tarjeta"></div>
+		<div th:replace="dist/fragmentos.html :: panelGrafico"></div>
+		<div th:replace="dist/fragmentos.html :: tabla"></div-->
+	</div>
+</div>
+
+<div th:fragment="contenidoLineas">
+	<div class="container-fluid">
+		<h1 class="mt-4 centrar">Consulta de líneas</h1>
+		<div th:replace="dist/fragmentos.html :: filtrosBusqueda"></div>
+		<div th:replace="dist/fragmentos.html :: tablaLineas"></div>
+		<div th:replace="dist/fragmentos.html :: toast"></div>
+	</div>
+</div>
+
+<div th:fragment="filtrosBusqueda">
+	<form th:action="@{/filtrar}" method="post"
+		th:object="${filtroLinea}">
+		<div class="form-group">
+			<div class="row rowFiltros">
+				<div class="col-md-2">
+					<label for="Nombre">Nombre público</label> <select
+						th:field="*{nombreLinea}" class="form-control" id="Nombre" name="Nombre">
+						<option value="-1">Seleccione</option>
+						<option th:each="n : ${lineasAll}" th:value="${n.nombre}"
+							th:text="${n.nombre}"></option>
+					</select> </select>
+				</div>
+				<div class="col-md-1">
+					<label for="codigo">Código</label> <input type="text" name="codigo"
+						th:field="*{codigoLinea}" class="form-control" id="codigo">
+				</div>
+				<div class="col-md-2">
+					<label for="estado">Estado</label> <select name="estado"
+						th:field="*{estadoLinea}" class="form-control" id="estado">
+						<option value="-1">Seleccione</option>
+						<option value="1">Vigente</option>
+						<option value="0">Baja</option>
+					</select> </select>
+				</div>
+				<div class="col-md-2">
+					<label for="subsistema"> Subsistema</label> <select name="subsistemas"
+						th:field="*{subsistemaSelected}" class="form-control"
+						id="subsistemas">
+						<option value="-1">Seleccione</option>
+						<option th:each="n : ${subsistemasAll}" th:value="${n.id}"
+							th:text="${n.descripcion}"></option>
+					</select> </select>
+				</div>
+				<div class="col-md-3">
+					<label for="empresa"> Empresa</label> <select name="empresa"
+						th:field="*{empresaSelected}" class="form-control" id="empresa">
+						<option value="-1">Seleccione</option>
+						<option th:each="n : ${empresasAll}" th:value="${n.id}"
+							th:text="${n.descripcion}"></option>
+					</select> </select>
+				</div>
+				<div class="col-md-1 botonesFiltro">
+					<button type="submit" class="btn btn-primary">Buscar</button>
+				</div>
+				<div class="col-md-1 botonesFiltro">
+					<button type="reset" class="btn btn-light">Borrar</button>
+				</div>
+			</div>
+			<div class="card mb-3">
+				<div class="card-header">
+					<i class="fas fa-table mr-1"></i> Búsqueda avanzada <a
+						data-toggle="collapse" href="#avanzada" aria-expanded="false"
+						aria-controls="avanzada">««»»</a>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col">
+							<div class="collapse multi-collapse" id="avanzada">nim
+								pariatur cliche reprehenderit, enim eiusmod high life accusamus
+								terry richardson ad squid. Nihil anim keffiyeh helvetica, craft
+								beer labore wes anderson cred nesciunt sapiente ea proident.</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div th:fragment="tablaLineas">
+	<div class="card mb-4">
+		<div class="card-header">
+			<i class="fas fa-table mr-1"></i> Líneas
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-bordered" id="dataTable" width="100%"
+					cellspacing="0">
+					<thead>
+						<tr>
+							<th>Nombre</th>
+							<th>Código</th>
+							<th>Subsistema</th>
+							<th>Tipo línea</th>
+							<th>Tarifa x Km</th>
+							<th>Fecha vigencia</th>
+							<th>Publicable web desde</th>
+							<th>Publicable web hasta</th>
+							<th>Fecha baja</th>
+							<th>Detalles</th>
+							<th>Editar</th>
+							<th>Eliminar</th>
+						</tr>
+					</thead>
+					<tbody class="tablaLineas">
+						<tr th:each="li : ${lineas}">
+							<td th:text="${li.nombre}"></td>
+							<td th:text="${li.id}"></td>
+							<td th:text="${li.subsistema.descripcion}"></td>
+							<td th:text="${li.tipoLinea.descripcion}"></td>
+							<td th:text="${li.tarifaXKm}"></td>
+							<td
+								th:text="${#temporals.format(li.fechaVigencia, 'dd/MM/yyyy')}"></td>
+							<td
+								th:text="${#temporals.format(li.publicableWebDesde, 'dd/MM/yyyy')}"></td>
+							<td
+								th:text="${#temporals.format(li.publicableWebHasta, 'dd/MM/yyyy')}"></td>
+							<td th:text="${#temporals.format(li.fechaBaja, 'dd/MM/yyyy')}"></td>
+							<td><a class="btn btn-outline-primary" href="#"
+								role="button"
+								th:href="${#httpServletRequest.getContextPath()+'/admin/entidad/' + li.id}">View</a></td>
+							<td>
+								<button type="button" class="btn btn-primary"
+									data-toggle="modal" data-target="#editarLinea"
+									th:attrappend="data-target=${li.id}" title="Nueva línea">Editar</button>
+								<!-- Modal Edición de la línea -->
+								<div class="modal fade" id="editarLinea" data-backdrop="static"
+									data-keyboard="false" tabindex="-1" th:attrappend="id=${li.id}"
+									aria-labelledby="staticBackdropLabel" aria-hidden="true">
+									<!-- -->
+									<form id="editarLineaForm" th:action="@{/admin/editarLinea}"
+										method="post">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title">Modificar línea</h5>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<input type="hidden" th:value="${li.id}"
+														class="form-control" id="editLineaID" name="editLineaID" />
+													<div class="row">
+														<div class="col-md-6">
+															<label for="editNombrePublico">Nombre</label> <input
+																type="text" th:value="${li.nombre}" maxlength="40"
+																readonly="readonly" class="form-control"
+																id="editNombrePublico" name="editNombrePublico" required />
+														</div>
+														<div class="col-md-6">
+															<label for="editSubsistemaSelect"> Tarifa x KM</label> <select
+																th:value="${li.tarifaXKm}" class="form-control"
+																id="editTrifaSelect" name="editTrifaSelect" required>
+																<option th:selected="${li.tarifaXKm} == N" value="N">N</option>
+																<option th:selected="${li.tarifaXKm} == S" value="S">S</option>
+															</select>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-md-6">
+															<label for="editarFechaPWebDesde">Publicable web
+																desde</label>
+															<div class="input-group date">
+																<input type="date" class="form-control"
+																	name="editarFechaPWebDesde" id="editarFechaPWebDesde"
+																	autocomplete="off" th:value="${li.publicableWebDesde}"
+																	required />
+																<div class="invalid-feedback">
+																	<p id="errorFechaPWDesde"></p>
+																</div>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<label for="editarFechaPWebHasta">Publicable web
+																hasta</label>
+															<div class="input-group date">
+																<input type="date" class="form-control"
+																	name="editarFechaPWebHasta" id="editarFechaPWebHasta"
+																	autocomplete="off" th:value="${li.publicableWebHasta}" />
+																<div class="invalid-feedback">
+																	<p id="errorFechaPWHasta"></p>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-md-6">
+															<label for="editSubsistemaSelect"> Subsistema</label> <select
+																th:value="${li.subsistema.id}" class="form-control"
+																name="editSubsistemaSelect" id="editSubsistemaSelect"
+																required>
+																<option th:each="n : ${subsistemasAll}"
+																	th:value="${n.id}" th:text="${n.descripcion}"
+																	th:selected="${n.id} == ${li.subsistema.id}"></option>
+															</select>
+														</div>
+														<div class="col-md-6">
+															<label for="editTipoLinea">Tipo línea</label> <select
+																th:value="${li.tipoLinea.id}" class="form-control"
+																name="editTipoLineaSelect" id="editTipoLineaSelect"
+																required>
+																<option th:each="n : ${tiposLineasAll}"
+																	th:value="${n.id}" th:text="${n.descripcion}"
+																	th:selected="${n.id} == ${li.tipoLinea.id}"></option>
+															</select>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-md-6">
+															<label for="editFechaVigencia">Fecha Vigencia</label><input
+																type="date" class="form-control"
+																name="editarFechaVigencia" id="editarFechaVigencia"
+																autocomplete="off" th:value="${li.fechaVigencia}"
+																required />
+														</div>
+														<div class="col-md-6">
+															<label for="editFechaVigencia">Fecha Baja</label><input
+																type="date" class="form-control" id="editarFechaBaja"
+																name="editarFechaBaja" autocomplete="off"
+																th:value="${li.fechaBaja}" />
+															<div class="invalid-feedback">
+																<p id="errorFechaBaja"></p>
+															</div>
+														</div>
+													</div>
+													<input type="text" th:value="${path}"
+														style="display: none;" id="path" />
+												</div>
+												<div class="modal-footer">
+													<button type="submit" class="btn btn-primary">Modificar</button>
+													<button type="button" class="btn btn-light"
+														data-dismiss="modal">Cancelar</button>
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</td>
+							<td>
+								<button type="button" class="btn btn-primary"
+									data-toggle="modal" data-target="#deleteLinea"
+									th:attrappend="data-target=${li.id}" title="Baja línea">Baja</button>
+								<!-- Modal Edición de la línea -->
+								<div class="modal fade" id="deleteLinea" data-backdrop="static"
+									data-keyboard="false" tabindex="-1" th:attrappend="id=${li.id}"
+									aria-labelledby="staticBackdropLabel" aria-hidden="true">
+									<!-- -->
+									<form id="bajaLineaForm" th:action="@{/admin/bajaLinea}"
+										method="post">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title">Baja de línea</h5>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<input type="hidden" th:value="${li.id}"
+														class="form-control" id="editLineaID" name="editLineaID" />
+													<div class="row">
+														<div class="col-md-12">
+															<p>Desea dar de baja la línea con nombre público</p>
+															<p th:text="${li.nombre}" /p>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-md-6">
+															<label for="editFechaVigencia">Fecha Baja</label><input
+																type="date" class="form-control" id="deleteFechaBaja"
+																name="deleteFechaBaja" autocomplete="off"
+																th:value="${li.fechaBaja}" required />
+															<div class="invalid-feedback">
+																<p id="errorDeleteFechaBaja"></p>
+															</div>
+														</div>
+													</div>
+													<input type="text" th:value="${path}"
+														style="display: none;" id="path" />
+												</div>
+												<div class="modal-footer">
+													<button type="submit" class="btn btn-primary">Baja</button>
+													<button type="button" class="btn btn-light"
+														data-dismiss="modal">Cancelar</button>
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<button type="button" class="btn btn-primary" data-toggle="modal"
+		onclick="$('.reset').click();hideToast();" data-target="#nuevaLinea"
+		title="Nueva línea">Nuevo</button>
+	<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+
+	<!-- Modal  th:action="@{/admin/nada}" th:object="${nuevaLinea}" method="post"  -->
+	<div class="modal fade" id="nuevaLinea" data-backdrop="static"
+		data-keyboard="false" tabindex="-1"
+		aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<form th:object="${nuevaLinea}" id="nuevaLineaForm">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="staticBackdropLabel">Línea</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-6">
+								<label for="nombrePublico">Nombre</label> <input type="text"
+									th:field="*{nombreLinea}" maxlength="40" class="form-control"
+									id="nombrePublico" required />
+							</div>
+							<div class="col-md-6">
+								<label for="birthdate">Publicable web desde</label>
+								<div class="input-group date">
+									<input type="date" class="form-control" id="fechaPublicableWeb"
+										autocomplete="off" th:field="*{fecha}" required />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<label for="subsistema"> Subsistema</label> <select
+									th:field="*{subsistemaSelected}" class="form-control"
+									id="subsistemasSelect" required>
+									<option th:each="n : ${subsistemasAll}" th:value="${n.id}"
+										th:text="${n.descripcion}"></option>
+								</select> </select>
+							</div>
+							<div class="col-md-6">
+								<label for="subsistema">Tipo línea</label> <select
+									th:field="*{subsistemaSelected}" class="form-control"
+									id="tipoLineaSelect" required>
+									<option th:each="n : ${tiposLineasAll}" th:value="${n.id}"
+										th:text="${n.descripcion}"></option>
+								</select> </select>
+							</div>
+						</div>
+						<input type="text" th:value="${path}" style="display: none;"
+							id="path" />
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary">Guardar</button>
+						<button type="reset" class="reset" style="display: none;"></button>
+						<button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- Modal  th:action="@{/admin/nada}" th:object="${nuevaLinea}" method="post"  -->
+	<div class="modal fade" id="bajaLinea" data-backdrop="static"
+		data-keyboard="false" tabindex="-1"
+		aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<form th:object="${nuevaLinea}" id="nuevaLineaForm">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="staticBackdropLabel">Línea</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-6">
+								<label for="nombrePublico">Nombre</label> <input type="text"
+									th:field="*{nombreLinea}" maxlength="40" class="form-control"
+									id="nombrePublico" required />
+							</div>
+							<div class="col-md-6">
+								<label for="birthdate">Publicable web desde</label>
+								<div class="input-group date">
+									<input type="date" class="form-control" id="fechaPublicableWeb"
+										autocomplete="off" th:field="*{fecha}" required />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<label for="subsistema"> Subsistema</label> <select
+									th:field="*{subsistemaSelected}" class="form-control"
+									id="subsistemasSelect" required>
+									<option th:each="n : ${subsistemasAll}" th:value="${n.id}"
+										th:text="${n.descripcion}"></option>
+								</select> </select>
+							</div>
+							<div class="col-md-6">
+								<label for="subsistema">Tipo línea</label> <select
+									th:field="*{subsistemaSelected}" class="form-control"
+									id="tipoLineaSelect" required>
+									<option th:each="n : ${tiposLineasAll}" th:value="${n.id}"
+										th:text="${n.descripcion}"></option>
+								</select> </select>
+							</div>
+						</div>
+						<input type="text" th:value="${path}" style="display: none;"
+							id="path" />
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary"
+							onsubmit="return crearLinea();">Guardar</button>
+						<button type="reset" class="reset" style="display: none;"></button>
+						<button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+</div>
+
+<div th:fragment="toast" class="mensajeToast">
+	<div role="alert" aria-live="assertive" aria-atomic="true"
+		class="toast" data-autohide="false">
+		<div class="toast-header">
+			<strong class="mr-auto">Información</strong>
+			<button type="button" class="ml-2 mb-1 close" data-dismiss="toast"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="toast-body">
+			<p th:text="${mensaje}" class="pMensaje"></p>
+		</div>
+	</div>
+</div>

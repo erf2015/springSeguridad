@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8" />
+<title>Spring STM Entidades</title>
+<!--link href="../static/css/bootstrap.min.css"
+	th:href="@{css/bootstrap.min.css}" rel="stylesheet"-->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+	crossorigin="anonymous">
+<link>
+
+</head>
+<body>
+
+
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+		integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+		crossorigin="anonymous"></script>
+
+
+	<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="#">Navbar</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+					<form th:action="@{/logout}" method="post">
+						<input class="nav-link" type="submit" value="Sign Out" />
+					</form>
+				</li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="${#httpServletRequest.getContextPath()+'/admin/rol'} " sec:authorize="hasAuthority('ADMIN')">Crear
+						Rol</a></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+					role="button" data-toggle="dropdown" aria-haspopup="true"
+					sec:authorize="hasAuthority('ADMIN')" aria-expanded="false">
+						User OP </a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" th:href="${#httpServletRequest.getContextPath()+'/admin/usuario/listado/'} ">Listar</a>
+						<a class="dropdown-item" th:href="${#httpServletRequest.getContextPath()+'/admin/usuario'} ">Adicionar</a>
+					</div></li>
+				<li class="nav-item"><a class="nav-link disabled" href="#"
+					tabindex="-1" aria-disabled="true">Disabled</a></li>
+			</ul>
+			<form class="form-inline my-2 my-lg-0">
+				<input class="form-control mr-sm-2" type="search"
+					placeholder="Search" aria-label="Search">
+				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+			</form>
+		</div>
+	</nav>
+
+
+
+
+	<div class="container">
+		<table class="table table-striped">
+			<h2>Entidades</h2>
+			<thead class="thead-dark">
+				<tr>
+					<th>ID</th>
+					<th>Subsistema</th>
+					<th>Fecha Baja</th>
+					<th>Description</th>
+					<th>View</th>
+					<th>Edit</th>
+					<th>Delete</th>
+				</tr>
+			</thead>
+			<tr th:each="stm : ${entidades}">
+				<td th:text="${stm.id}">Entidad ID</td>
+				<td th:text="${stm.subsistema}">Entidad subsistema</td>
+				<td th:text="${stm.fechaBaja}">Entidad Fecha Baja</td>
+				<td th:text="${stm.descripcion}">Entidad Description</td>
+				<td><a class="btn btn-outline-primary" href="#" role="button"
+					th:href="${#httpServletRequest.getContextPath()+'/admin/entidad/' + stm.id}">View</a></td>
+				<td><a class="btn btn-outline-success" href="#" role="button"
+					th:href="${#httpServletRequest.getContextPath()+'/admin/entidad/editar/' + stm.id}"
+					sec:authorize="hasAuthority('ADMIN')">Edit</a></td>
+				<td><a class="btn btn-outline-danger" href="#" role="button"
+					th:href="${#httpServletRequest.getContextPath()+'/admin/entidad/eliminar/' + stm.id} "
+					sec:authorize="hasAuthority('ADMIN')">Delete</a></td>
+			</tr>
+		</table>
+		<a th:href="${#httpServletRequest.getContextPath()+'/admin/entidad/alta'}" class="btn btn-outline-primary"
+			sec:authorize="hasAuthority('ADMIN')" role="button">New</a>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
+	<script src="../static/js/bootstrap.min.js"
+		th:src="@{js/bootstrap.min.js}"></script>
+</body>
+</html>

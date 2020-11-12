@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Spring STM Entidades</title>
+<!--link href="../static/css/bootstrap.min.css"
+	th:href="@{css/bootstrap.min.css}" rel="stylesheet"-->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+	crossorigin="anonymous">
+<link>
+<link href="menu.html" rel="import" />
+</head>
+<body>
+
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+		integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+		crossorigin="anonymous"></script>
+
+	<h2>Creación / Edición de Entidad</h2>
+	<div class="container">
+		<form th:object="${entidad}" th:action="@{/privado/entidad}"
+			method="post">
+			<input type="hidden" th:field="*{id}" />
+			<div class="form-group">
+				<label>Subsistema</label> <input type="text"
+					th:field="*{subsistema}" class="form-control"
+					placeholder="Subsistema">
+			</div>
+			<div class="form-group">
+				<label>Descripción</label> <input type="text"
+					th:field="*{descripcion}" class="form-control"
+					placeholder="Descripción">
+			</div>
+			<div class="form-group row">
+				<label class="col-sm-2 control-label">Fecha Baja:</label>
+				<div class="col-sm-10">
+					<input type="date" th:field="${entidad.fechaBaja}" />
+				</div>
+			</div>
+			<button type="submit" class="btn btn-primary">Enviar</button>
+		</form>
+		<div class="form-group">
+			<div class="col-sm-offset-2">
+				<a href="#" class="btn btn-outline-success" role="button"
+					th:href="${#httpServletRequest.getContextPath()+'/privado/entidades'}">Regresar</a>
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
+	<script src="../static/js/bootstrap.min.js"
+		th:src="@{js/bootstrap.min.js}"></script>
+</body>
+
+</html>
