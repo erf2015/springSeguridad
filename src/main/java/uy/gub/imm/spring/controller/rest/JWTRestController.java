@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,12 +66,12 @@ public class JWTRestController {
 	}
 
 	@RequestMapping(path = "/authenticar", method = RequestMethod.POST)
-	public ResponseEntity<Object> validarToken(@RequestBody JWTRequestToken request) {
+	public ResponseEntity<Object> validarToken(@Valid @RequestBody JWTRequestToken request) {
 		try {
-			Authentication authentication = auth
-					.authenticate(new UsernamePasswordAuthenticationToken(request.getNombre(), request.getPassword()));
+			Authentication authentication = auth.authenticate(
+					new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-			UserDetails userdetails = userDetailService.loadUserByUsername(request.getNombre());
+			UserDetails userdetails = userDetailService.loadUserByUsername(request.getUsername());
 			String token = jwt.generarToken(userdetails);
 			JWTResponseToken response = new JWTResponseToken(token);
 			return ResponseEntity.ok().body(response);
@@ -81,7 +82,7 @@ public class JWTRestController {
 	}
 
 	@RequestMapping(path = "/add", method = RequestMethod.POST, consumes = "application/json")
-	public ResponseEntity<Object> nuevoUser(@RequestBody JWTRequestToken user) {
+	public ResponseEntity<Object> nuevoUser(@Valid @RequestBody JWTRequestToken user) {
 		logger.info("Inicio nuevoUser: " + user);
 		ApiResponseDTO response;
 		if (user.getNombre() == null || user.getPassword() == null) {

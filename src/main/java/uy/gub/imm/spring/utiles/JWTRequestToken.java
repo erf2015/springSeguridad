@@ -10,14 +10,17 @@ public class JWTRequestToken {
 
 	@Column
 	@NotBlank(message = "El email es requerido")
+	@Size(min = 3, message = "El username debe tener al menos 3 caracteres")
 	private String username;
 
 	@Column
 	@NotBlank(message = "El nombre es requerido")
+	@Size(min = 3, message = "El username debe tener al menos 3 caracteres")
 	private String nombre;
 
 	@Column
 	@NotBlank(message = "El apellido es requerido")
+	@Size(min = 3, message = "El username debe tener al menos 3 caracteres")
 	private String apellido;
 
 	@NonNull
