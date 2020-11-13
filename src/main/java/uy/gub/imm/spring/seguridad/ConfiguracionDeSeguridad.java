@@ -35,22 +35,6 @@ public class ConfiguracionDeSeguridad extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private AuthEntryPointJwt entryPointFault;
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetails).passwordEncoder(passwordEncoder());
-	}
-
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		//http.csrf().disable().authorizeRequests().antMatchers("/jwt/**").permitAll().anyRequest().authenticated();
-		http.cors().and().csrf().disable()
-		.exceptionHandling().authenticationEntryPoint(entryPointFault).and()
-		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-		.authorizeRequests().antMatchers("/jwt/**").permitAll()
-		.anyRequest().authenticated();
-		http.addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class);
-	}
-
 	@Bean
 	public AuthenticationTokenFilter tokenFilter() {
 		return new AuthenticationTokenFilter();
@@ -65,6 +49,20 @@ public class ConfiguracionDeSeguridad extends WebSecurityConfigurerAdapter {
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
+	}
+
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetails).passwordEncoder(passwordEncoder());
+	}
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		// http.csrf().disable().authorizeRequests().antMatchers("/jwt/**").permitAll().anyRequest().authenticated();
+		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(entryPointFault).and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+				.antMatchers("/jwt/**").permitAll().anyRequest().authenticated();
+		http.addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 
 }

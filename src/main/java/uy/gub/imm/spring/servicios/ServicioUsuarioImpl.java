@@ -34,8 +34,6 @@ public class ServicioUsuarioImpl implements UserDetailsService {
 		List<GrantedAuthority> roles = new ArrayList<>();
 		for (Rol rol : user.getAuthority()) {
 			logger.info("El rol del usuario " + username + " es: " + rol.getAuthority());
-			// System.out.println("El rol del usuario " + username + " es: " +
-			// rol.getAuthority());
 			GrantedAuthority grant = new SimpleGrantedAuthority(rol.getAuthority());
 			roles.add(grant);
 		}

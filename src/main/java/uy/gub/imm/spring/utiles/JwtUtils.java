@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -90,4 +92,13 @@ public class JwtUtils implements Serializable {
 				.signWith(SignatureAlgorithm.HS512, key).compact();
 	}
 
+	public Object extraerAuthorities(HttpServletRequest request) {
+		String header = request.getHeader("Authorization");
+		if (header != null && header.startsWith("Bearer")) {
+			String token = header.substring(7, header.length());
+			Map<String, Object> claims = obtenerTodosClaims(token);
+			return claims.get("roles");
+		}
+		return null;
+	}
 }

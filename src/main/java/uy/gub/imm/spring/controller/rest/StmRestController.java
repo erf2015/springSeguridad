@@ -1,6 +1,10 @@
 package uy.gub.imm.spring.controller.rest;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -19,7 +23,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import uy.gub.imm.spring.jpa.StmEntidad;
+import uy.gub.imm.spring.jpa.Usuario;
 import uy.gub.imm.spring.repositorios.StmEntidadServicio;
+import uy.gub.imm.spring.repositorios.UsuarioRepositorio;
+import uy.gub.imm.spring.utiles.ApiResponseDTO;
+import uy.gub.imm.spring.utiles.JwtUtils;
 
 @Controller
 @RequestMapping(path = "/servicio")
@@ -29,6 +37,15 @@ public class StmRestController {
 
 	@Autowired
 	private StmEntidadServicio servicio;
+
+	@Autowired
+	private HttpServletRequest request;
+
+	@Autowired
+	private JwtUtils jwt;
+
+	@Autowired
+	private UsuarioRepositorio repoUser;
 
 	@GetMapping(path = "/get/{id}")
 	@PreAuthorize(value = "hasAuthority('USER')")
@@ -42,10 +59,13 @@ public class StmRestController {
 	}
 
 	@GetMapping(path = "/")
-	@PreAuthorize(value = "hasAuthority('ADMIN')")
+	@PreAuthorize(value = "hasAuthority('USER')")
 	public ResponseEntity<Object> entidades() {
 		Iterable<StmEntidad> resultado = servicio.findAll();
-		return ResponseEntity.ok().body(resultado);
+		ApiResponseDTO response = new ApiResponseDTO(request.getRequestURL().toString(),
+				jwt.extraerAuthorities(request), new Date(), resultado, HttpStatus.OK.value());
+		// return ResponseEntity.ok().body(resultado);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@PostMapping(path = "/post/")
@@ -81,6 +101,15 @@ public class StmRestController {
 		servicio.delete(eliminar);
 		logger.debug(metodo + " Entidad eliminada");
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Entidad eliminada.");
+	}
+
+	@GetMapping(path = "/all/user")
+	@PreAuthorize(value = "hasAuthority('ADMIN')")
+	public ResponseEntity<Object> allUser() {
+		List<Usuario> users = repoUser.findAll();
+		ApiResponseDTO response = new ApiResponseDTO(request.getRequestURL().toString(),
+				jwt.extraerAuthorities(request), new Date(), users, HttpStatus.OK.value());
+		return ResponseEntity.ok().body(response);
 	}
 
 }

@@ -51,7 +51,6 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
 	private String extraerToken(HttpServletRequest request) {
 		String header = request.getHeader("Authorization");
-
 		if (header != null && header.startsWith("Bearer")) {
 			logger.info("extraerToken: Trae token");
 			String response = header.substring(7, header.length());
