@@ -24,6 +24,8 @@ public class MyErrorController implements ErrorController {
 				errorPage = "error-404";
 			} else if (error == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
 				errorPage = "error-500";
+			} else if (error == HttpStatus.UNAUTHORIZED.value()) {
+				errorPage = "error-401";
 			} else {
 				errorPage = "error";
 			}

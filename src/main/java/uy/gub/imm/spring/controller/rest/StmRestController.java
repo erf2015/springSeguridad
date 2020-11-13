@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ public class StmRestController {
 	private StmEntidadServicio servicio;
 
 	@GetMapping(path = "/get/{id}")
+	@PreAuthorize(value = "hasAuthority('USER')")
 	public ResponseEntity<StmEntidad> obtenerEntidadPorID(@PathVariable(name = "id", required = true) Long id)
 			throws EntityNotFoundException {
 		String metodo = "obtenerEntidadPorID";
@@ -40,12 +42,14 @@ public class StmRestController {
 	}
 
 	@GetMapping(path = "/")
+	@PreAuthorize(value = "hasAuthority('ADMIN')")
 	public ResponseEntity<Object> entidades() {
 		Iterable<StmEntidad> resultado = servicio.findAll();
 		return ResponseEntity.ok().body(resultado);
 	}
 
 	@PostMapping(path = "/post/")
+	@PreAuthorize(value = "hasAuthority('ADMIN')")
 	public ResponseEntity<StmEntidad> adicionarEntidad(@Valid @RequestBody StmEntidad entidad) {
 		String metodo = "adicionarEntidad";
 		logger.debug(metodo + ": ", entidad.toString());
