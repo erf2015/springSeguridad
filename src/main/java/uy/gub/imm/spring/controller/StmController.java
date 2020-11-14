@@ -15,7 +15,7 @@ import com.sun.istack.logging.Logger;
 
 import uy.gub.imm.spring.dto.STMEntidadDTO;
 import uy.gub.imm.spring.jpa.StmEntidad;
-import uy.gub.imm.spring.repositorios.StmEntidadServicio;
+import uy.gub.imm.spring.repositorios.StmEntidadRepositorio;
 
 @Controller
 public class StmController {
@@ -23,7 +23,7 @@ public class StmController {
 	private static final Logger logger = Logger.getLogger(StmController.class);
 
 	@Autowired
-	private StmEntidadServicio servicio;
+	private StmEntidadRepositorio servicio;
 
 	/**
 	 * Te redirecciona a la pagina a suministrar los datos de la nueva entidad.

@@ -1,6 +1,10 @@
 package uy.gub.imm.spring.controller.rest;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -8,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,18 +19,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import uy.gub.imm.spring.jpa.StmEntidad;
-import uy.gub.imm.spring.repositorios.StmEntidadServicio;
+import uy.gub.imm.spring.repositorios.StmEntidadRepositorio;
+import uy.gub.imm.spring.servicios.ServicioReporteEntidades;
 
-@Controller
+@RestController
 @RequestMapping(path = "/servicio")
 public class StmRestController {
 
 	private static final Logger logger = LoggerFactory.getLogger(StmRestController.class);
 
 	@Autowired
-	private StmEntidadServicio servicio;
+	private StmEntidadRepositorio servicio;
+
+	@Autowired
+	private ServicioReporteEntidades reporte;
 
 	@GetMapping(path = "/get/{id}")
 	public ResponseEntity<StmEntidad> obtenerEntidadPorID(@PathVariable(name = "id", required = true) Long id)
@@ -77,6 +85,33 @@ public class StmRestController {
 		servicio.delete(eliminar);
 		logger.debug(metodo + " Entidad eliminada");
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Entidad eliminada.");
+	}
+
+	/**
+	 * Crea el reporte y lo descarga a una ubicación fija
+	 * 
+	 * @param formato
+	 * @return
+	 */
+	@GetMapping(path = "/report/{formato}")
+	public ResponseEntity<Object> reporte(@PathVariable(value = "formato") String formato) {
+		String responseEntity = reporte.exportarEntidades(formato);
+		return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
+	}
+
+	/**
+	 * Crea el reporte y lo descarga
+	 * 
+	 * @param response
+	 * @throws IOException
+	 */
+	@GetMapping(path = "/report/nuevo")
+	public void nuevoReport(HttpServletResponse response) throws IOException {
+		response.setContentType("application/x-download");
+		response.addHeader("Content-Disposition", "attachment; filename=entidadesReporte.pdf;");
+		logger.info("nuevoReport INFO Generado PDF");
+		OutputStream out = response.getOutputStream();
+		reporte.otroExporter("pdf", out);
 	}
 
 }

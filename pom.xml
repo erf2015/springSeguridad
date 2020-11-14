@@ -98,6 +98,15 @@
 			<artifactId>thymeleaf-extras-java8time</artifactId>
 		</dependency>
 
+		<!-- Dependencia para ver el tema de JasperReport -->
+
+		<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.16.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
