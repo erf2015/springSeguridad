@@ -791,7 +791,13 @@
 			title="Descargar formato PDF" role="button">PDF</a> <a
 			th:href="${#httpServletRequest.getContextPath()+'/servicio/report/download/xls'}"
 			class="btn btn-outline-primary" sec:authorize="hasAuthority('USER')"
-			title="Descargar formato excell" role="button">XLS</a>
+			title="Descargar formato excell" role="button">XLS</a> <a
+			th:href="${#httpServletRequest.getContextPath()+'/servicio/report/download/doc'}"
+			class="btn btn-outline-primary" sec:authorize="hasAuthority('USER')"
+			title="Descargar formato excell" role="button">DOCX</a> <a
+			th:href="${#httpServletRequest.getContextPath()+'/servicio/report/download/csv'}"
+			class="btn btn-outline-primary" sec:authorize="hasAuthority('USER')"
+			title="Descargar formato excell" role="button">CSV</a>
 	</div>
 </div>
 

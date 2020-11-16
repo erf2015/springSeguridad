@@ -108,21 +108,26 @@ public class StmRestController {
 	 */
 	@GetMapping(path = "/report/download/{formato}")
 	public void jasperReport(@PathVariable("formato") String formato, HttpServletResponse response) throws IOException {
+		OutputStream out = response.getOutputStream();
+		response.setContentType("application/x-download");
 		if (formato.equalsIgnoreCase("pdf")) {
-			response.setContentType("application/x-download");
 			response.addHeader("Content-Disposition", "attachment; filename=entidadesReporte.pdf;");
 			logger.info("nuevoReport INFO Generado PDF");
-			OutputStream out = response.getOutputStream();
 			reporte.descargarReporte(formato, out);
-		} else {
-			response.setContentType("application/x-download");
+		} else if (formato.equalsIgnoreCase("xls")) {
 			response.addHeader("Content-Disposition", "attachment; filename=entidadesReporte.xls;");
 			logger.info("nuevoReport INFO Generado XLS");
-			OutputStream out = response.getOutputStream();
-			reporte.descargarReporte(formato, out);
-			//ByteArrayOutputStream os = (ByteArrayOutputStream) out;
-			//response.getOutputStream().write(os.toByteArray());
-			//response.flushBuffer();
+			reporte.descargarReporte("xls", out);
+		} else if (formato.equalsIgnoreCase("doc")) {
+			response.addHeader("Content-Disposition", "attachment; filename=entidadesReporte.docx;");
+			logger.info("nuevoReport INFO Generado DOC");
+			reporte.descargarReporte("doc", out);
+		} else if (formato.equalsIgnoreCase("csv")) {
+			response.addHeader("Content-Disposition", "attachment; filename=entidadesReporte.csv;");
+			logger.info("nuevoReport INFO Generado CSV");
+			reporte.descargarReporte("csv", out);
+		} else {// html
+
 		}
 	}
 }
