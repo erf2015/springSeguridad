@@ -27,9 +27,15 @@ public class JWTRequestToken {
 	@Size(min = 3, message = "La contraseña debe tener al menos 3 carateres")
 	private String password;
 
-	public JWTRequestToken(String nombre, String password) {
+	public JWTRequestToken(
+			@NotBlank(message = "El email es requerido") @Size(min = 3, message = "El username debe tener al menos 3 caracteres") String username,
+			@NotBlank(message = "El nombre es requerido") @Size(min = 3, message = "El username debe tener al menos 3 caracteres") String nombre,
+			@NotBlank(message = "El apellido es requerido") @Size(min = 3, message = "El username debe tener al menos 3 caracteres") String apellido,
+			@NonNull @Size(min = 3, message = "La contraseña debe tener al menos 3 carateres") String password) {
 		super();
+		this.username = username;
 		this.nombre = nombre;
+		this.apellido = apellido;
 		this.password = password;
 	}
 

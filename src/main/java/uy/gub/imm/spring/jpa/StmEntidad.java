@@ -103,4 +103,10 @@ public class StmEntidad implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "StmEntidad [id=" + id + ", descripcion=" + descripcion + ", fechaBaja=" + fechaBaja + ", subsistema="
+				+ subsistema + "]";
+	}
+
 }

@@ -83,14 +83,16 @@ public class PublicController {
 	@PostConstruct
 	public void init() {
 		logger.info("Inicializar Start");
-		StmEntidad uno = new StmEntidad(1L, "Primer elemento", new Date(), 1);
-		StmEntidad dos = new StmEntidad(2L, "Segundo elemento", new Date(), 2);
-		StmEntidad tres = new StmEntidad(3L, "Tercer elemento", new Date(), 3);
-		StmEntidad cuatro = new StmEntidad(4L, "Cuarto elemento", new Date(), 4);
-		repoEntidad.save(uno);
-		repoEntidad.save(dos);
-		repoEntidad.save(tres);
-		repoEntidad.save(cuatro);
+		String[] nombre = new String[] { "Primer elemento", "Segundo elemento", "Tercer elemento", "Cuarto elemento",
+				"ABC", "QWE", "ERT", "ASD", "DDFV", "ERT34", "SFA", "WETWET", "NRY", "DFSDF", "SD SDG", "SDFHT",
+				"TYJEY", "WEFBVSD", "VSFDFDVDSF", "SBWRT", "WERYFB", "VBDZFBSD", "ADFBA5T", "ADFBAE5", "AERGQ", "XVCB",
+				"DFHE", "AFDYH", "NUTYSNS" };
+		Long id = 1L;
+		for (int i = 0; i < nombre.length; i++) {
+			StmEntidad uno = new StmEntidad(id, nombre[i], new Date(), i + 1);
+			repoEntidad.save(uno);
+			id++;
+		}
 		// Usuario: USER/ADMIN Contraseña 1234
 		Usuario admin = new Usuario();
 		admin.setPassword("$2a$04$C7bQ5SCtEiGwiZLma7l2u.k/WFnTUaRyLfQcQIOuY4o30.QCKFeqK");// 1234

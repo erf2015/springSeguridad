@@ -4,6 +4,10 @@ public class JWTResponseToken {
 
 	private String token;
 
+	public JWTResponseToken() {
+		super();
+	}
+
 	public JWTResponseToken(String token) {
 		super();
 		this.token = token;
@@ -15,6 +19,11 @@ public class JWTResponseToken {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	@Override
+	public String toString() {
+		return "JWTResponseToken [token=" + token + "]";
 	}
 
 }

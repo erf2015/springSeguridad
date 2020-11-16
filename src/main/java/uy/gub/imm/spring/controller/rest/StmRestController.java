@@ -61,10 +61,9 @@ public class StmRestController {
 	@GetMapping(path = "/")
 	@PreAuthorize(value = "hasAuthority('USER')")
 	public ResponseEntity<Object> entidades() {
-		Iterable<StmEntidad> resultado = servicio.findAll();
+		List<StmEntidad> resultado = servicio.findAll();
 		ApiResponseDTO response = new ApiResponseDTO(request.getRequestURL().toString(),
 				jwt.extraerAuthorities(request), new Date(), resultado, HttpStatus.OK.value());
-		// return ResponseEntity.ok().body(resultado);
 		return ResponseEntity.ok().body(response);
 	}
 
