@@ -1,6 +1,5 @@
 package uy.gub.imm.spring.controller.rest;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
