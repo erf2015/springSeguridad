@@ -2,6 +2,7 @@ package uy.gub.imm.spring.servicios;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,7 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
 import net.sf.jasperreports.export.SimplePdfReportConfiguration;
 import net.sf.jasperreports.export.SimpleWriterExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import uy.gub.imm.spring.jpa.StmEntidad;
 import uy.gub.imm.spring.repositorios.StmEntidadRepositorio;
@@ -42,7 +44,7 @@ public class ServicioReporteEntidades {
 	@Autowired
 	private StmEntidadRepositorio repoEntidades;
 
-	public String exportarEntidades(String formato) {
+	public String exportarEntidadesLocal(String formato) {
 		logger.info("exportarEntidades BEGIN " + formato);
 		List<StmEntidad> entidades = repoEntidades.findAll();
 		String destFileName = "/home/fernando/Escritorio";
@@ -119,36 +121,71 @@ public class ServicioReporteEntidades {
 	 * @param formato
 	 * @param out
 	 */
-	public void otroExporter(String formato, OutputStream out) {
+	public void descargarReporte(String formato, OutputStream out) {
 		logger.info("otroExporter BEGIN " + formato);
 		List<StmEntidad> entidades = repoEntidades.findAll();
-		try {
-			File inputStreamFile = ResourceUtils.getFile("classpath:entidades_report.jrxml");
-			logger.info("otroExporter INFO fichero cargado path absoluto: " + inputStreamFile.getAbsolutePath());
-			JasperReport jasperReport = JasperCompileManager.compileReport(inputStreamFile.getAbsolutePath());
-			logger.info("otroExporter INFO fichero cargado y compilado");
-			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(entidades);
-			logger.info("otroExporter INFO collección de datos asociados al fichero de reporte");
-			Map<String, Object> parameters = new HashMap<>();
-			parameters.put("creado", "Fernando");
-			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-			logger.info("otroExporter INFO Generando PDF");
-			JRPdfExporter pdf = new JRPdfExporter();
-			pdf.setExporterInput(new SimpleExporterInput(jasperPrint));
-			pdf.setExporterOutput(new SimpleOutputStreamExporterOutput("entidadesReporte.pdf"));
-			SimplePdfReportConfiguration reportConfig_PDF = new SimplePdfReportConfiguration();
-			reportConfig_PDF.setSizePageToContent(true);
-			reportConfig_PDF.setForceLineBreakPolicy(false);
-			SimplePdfExporterConfiguration exportConfig = new SimplePdfExporterConfiguration();
-			exportConfig.setMetadataAuthor("Fernando");
-			exportConfig.setEncrypted(true);
-			exportConfig.setAllowedPermissionsHint("PRINTING");
-			pdf.setConfiguration(exportConfig);
-			pdf.exportReport();
-			JasperExportManager.exportReportToPdfStream(jasperPrint, out);
-			logger.info("otroExporter INFO Generado PDF");
-		} catch (FileNotFoundException | JRException e) {
-			logger.info("otroExporter Error " + e.getMessage());
+		if (formato.equalsIgnoreCase("pdf")) {
+			try {
+				File inputStreamFile = ResourceUtils.getFile("classpath:entidades_report.jrxml");
+				logger.info("otroExporter INFO fichero cargado path absoluto: " + inputStreamFile.getAbsolutePath());
+				JasperReport jasperReport = JasperCompileManager.compileReport(inputStreamFile.getAbsolutePath());
+				logger.info("otroExporter INFO fichero cargado y compilado");
+				JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(entidades);
+				logger.info("otroExporter INFO collección de datos asociados al fichero de reporte");
+				Map<String, Object> parameters = new HashMap<>();
+				parameters.put("creado", "Fernando");
+				JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+				logger.info("otroExporter INFO Generando PDF");
+				JRPdfExporter pdf = new JRPdfExporter();
+
+				pdf.setExporterInput(new SimpleExporterInput(jasperPrint));
+				pdf.setExporterOutput(new SimpleOutputStreamExporterOutput("entidadesReporte.pdf"));
+
+				SimplePdfReportConfiguration reportConfig_PDF = new SimplePdfReportConfiguration();
+				reportConfig_PDF.setSizePageToContent(true);
+				reportConfig_PDF.setForceLineBreakPolicy(false);
+				SimplePdfExporterConfiguration exportConfig = new SimplePdfExporterConfiguration();
+				exportConfig.setMetadataAuthor("Fernando");
+				exportConfig.setEncrypted(true);
+				exportConfig.setAllowedPermissionsHint("PRINTING");
+				pdf.setConfiguration(exportConfig);
+				pdf.exportReport();
+				JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+				logger.info("otroExporter INFO Generado PDF");
+			} catch (FileNotFoundException | JRException e) {
+				logger.info("otroExporter Error " + e.getMessage());
+			}
+		} else {
+			try {
+				File inputStreamFile = ResourceUtils.getFile("classpath:entidades_report.jrxml");
+				logger.info("otroExporter INFO fichero cargado path absoluto: " + inputStreamFile.getAbsolutePath());
+				JasperReport jasperReport = JasperCompileManager.compileReport(inputStreamFile.getAbsolutePath());
+				logger.info("otroExporter INFO fichero cargado y compilado");
+				JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(entidades);
+				logger.info("otroExporter INFO collección de datos asociados al fichero de reporte");
+				Map<String, Object> parameters = new HashMap<>();
+				parameters.put("creado", "Fernando");
+				JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+				logger.info("otroExporter INFO Generando XLS");
+
+				JRXlsxExporter xls = new JRXlsxExporter();
+				xls.setExporterInput(new SimpleExporterInput(jasperPrint));
+				//xls.setExporterOutput(new SimpleOutputStreamExporterOutput("entidadesReporte.xls"));
+				xls.setExporterOutput(new SimpleOutputStreamExporterOutput(out));
+				
+				SimpleXlsxReportConfiguration reportConfig_XLS = new SimpleXlsxReportConfiguration();
+				reportConfig_XLS.setSheetNames(new String[] { "Entidades STM" });
+				reportConfig_XLS.setOnePagePerSheet(false);
+				reportConfig_XLS.setRemoveEmptySpaceBetweenRows(true);
+				reportConfig_XLS.setDetectCellType(true);
+				reportConfig_XLS.setWhitePageBackground(false);
+				xls.setConfiguration(reportConfig_XLS);
+				xls.exportReport();
+
+				logger.info("otroExporter INFO Generado XLS");
+			} catch (JRException | FileNotFoundException e) {
+				logger.info("otroExporter Error " + e.getMessage());
+			}
 		}
 	}
 

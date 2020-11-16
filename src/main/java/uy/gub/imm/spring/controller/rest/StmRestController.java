@@ -1,5 +1,6 @@
 package uy.gub.imm.spring.controller.rest;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -95,7 +96,7 @@ public class StmRestController {
 	 */
 	@GetMapping(path = "/report/{formato}")
 	public ResponseEntity<Object> reporte(@PathVariable(value = "formato") String formato) {
-		String responseEntity = reporte.exportarEntidades(formato);
+		String responseEntity = reporte.exportarEntidadesLocal(formato);
 		return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
 	}
 
@@ -105,13 +106,23 @@ public class StmRestController {
 	 * @param response
 	 * @throws IOException
 	 */
-	@GetMapping(path = "/report/nuevo")
-	public void nuevoReport(HttpServletResponse response) throws IOException {
-		response.setContentType("application/x-download");
-		response.addHeader("Content-Disposition", "attachment; filename=entidadesReporte.pdf;");
-		logger.info("nuevoReport INFO Generado PDF");
-		OutputStream out = response.getOutputStream();
-		reporte.otroExporter("pdf", out);
+	@GetMapping(path = "/report/download/{formato}")
+	public void jasperReport(@PathVariable("formato") String formato, HttpServletResponse response) throws IOException {
+		if (formato.equalsIgnoreCase("pdf")) {
+			response.setContentType("application/x-download");
+			response.addHeader("Content-Disposition", "attachment; filename=entidadesReporte.pdf;");
+			logger.info("nuevoReport INFO Generado PDF");
+			OutputStream out = response.getOutputStream();
+			reporte.descargarReporte(formato, out);
+		} else {
+			response.setContentType("application/x-download");
+			response.addHeader("Content-Disposition", "attachment; filename=entidadesReporte.xls;");
+			logger.info("nuevoReport INFO Generado XLS");
+			OutputStream out = response.getOutputStream();
+			reporte.descargarReporte(formato, out);
+			//ByteArrayOutputStream os = (ByteArrayOutputStream) out;
+			//response.getOutputStream().write(os.toByteArray());
+			//response.flushBuffer();
+		}
 	}
-
 }

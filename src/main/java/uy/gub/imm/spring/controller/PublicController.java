@@ -319,6 +319,17 @@ public class PublicController {
 		return "/dist/gestionLineas";
 	}
 
+	@GetMapping("/consultaEntidades")
+	public String consultaEntidades(Model model) {
+		List<STMEntidadDTO> entidades = new ArrayList<>();
+		Iterable<StmEntidad> listado = repoEntidad.findAll();
+		for (StmEntidad iterator : listado) {
+			entidades.add(new STMEntidadDTO(iterator));
+		}
+		model.addAttribute("entidades", entidades);
+		return "/dist/gestionEntidades";
+	}
+
 	@PostMapping("/admin/editarLinea")
 	public String editarDatosLinea(HttpServletRequest request) {
 		Linea editar = new Linea();

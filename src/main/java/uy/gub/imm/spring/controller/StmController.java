@@ -97,6 +97,7 @@ public class StmController {
 		return "/privado/entidades";
 	}
 
+
 	/**
 	 * Buscar la entidad según el id provisto. Redirecciona a la vista según el id
 	 * provisto

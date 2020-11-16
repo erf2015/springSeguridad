@@ -93,8 +93,9 @@
 					<nav class="sb-sidenav-menu-nested nav">
 						<a class="nav-link"
 							th:href="${#httpServletRequest.getContextPath()+'/consultaLineas'}">Consulta
-							líneas</a> <a class="nav-link" href="layout-sidenav-light.html">Light
-							Sidenav</a>
+							líneas</a> <a class="nav-link"
+							th:href="${#httpServletRequest.getContextPath()+'/consultaEntidades'}">Consulta
+							entidades</a>
 					</nav>
 				</div>
 				<a class="nav-link collapsed" href="#" data-toggle="collapse"
@@ -324,14 +325,22 @@
 	</div>
 </div>
 
+
+<div th:fragment="contenidoEntidades">
+	<div class="container-fluid">
+		<h1 class="mt-4 centrar">Consulta de entidades</h1>
+		<div th:replace="dist/fragmentos.html :: tablaEntidades"></div>
+	</div>
+</div>
+
 <div th:fragment="filtrosBusqueda">
-	<form th:action="@{/filtrar}" method="post"
-		th:object="${filtroLinea}">
+	<form th:action="@{/filtrar}" method="post" th:object="${filtroLinea}">
 		<div class="form-group">
 			<div class="row rowFiltros">
 				<div class="col-md-2">
 					<label for="Nombre">Nombre público</label> <select
-						th:field="*{nombreLinea}" class="form-control" id="Nombre" name="Nombre">
+						th:field="*{nombreLinea}" class="form-control" id="Nombre"
+						name="Nombre">
 						<option value="-1">Seleccione</option>
 						<option th:each="n : ${lineasAll}" th:value="${n.nombre}"
 							th:text="${n.nombre}"></option>
@@ -350,9 +359,9 @@
 					</select> </select>
 				</div>
 				<div class="col-md-2">
-					<label for="subsistema"> Subsistema</label> <select name="subsistemas"
-						th:field="*{subsistemaSelected}" class="form-control"
-						id="subsistemas">
+					<label for="subsistema"> Subsistema</label> <select
+						name="subsistemas" th:field="*{subsistemaSelected}"
+						class="form-control" id="subsistemas">
 						<option value="-1">Seleccione</option>
 						<option th:each="n : ${subsistemasAll}" th:value="${n.id}"
 							th:text="${n.descripcion}"></option>
@@ -741,6 +750,49 @@
 		</form>
 	</div>
 
+</div>
+
+<div th:fragment="tablaEntidades">
+	<div class="container">
+		<table class="table table-striped">
+			<h2>Entidades</h2>
+			<thead class="thead-dark">
+				<tr>
+					<th>ID</th>
+					<th>Subsistema</th>
+					<th>Fecha Baja</th>
+					<th>Description</th>
+					<th>View</th>
+					<th>Edit</th>
+					<th>Delete</th>
+				</tr>
+			</thead>
+			<tr th:each="stm : ${entidades}">
+				<td th:text="${stm.id}">Entidad ID</td>
+				<td th:text="${stm.subsistema}">Entidad subsistema</td>
+				<td th:text="${stm.fechaBaja}">Entidad Fecha Baja</td>
+				<td th:text="${stm.descripcion}">Entidad Description</td>
+				<td><a class="btn btn-outline-primary" href="#" role="button"
+					th:href="${#httpServletRequest.getContextPath()+'/admin/entidad/' + stm.id}">View</a></td>
+				<td><a class="btn btn-outline-success" href="#" role="button"
+					th:href="${#httpServletRequest.getContextPath()+'/admin/entidad/editar/' + stm.id}"
+					sec:authorize="hasAuthority('ADMIN')">Edit</a></td>
+				<td><a class="btn btn-outline-danger" href="#" role="button"
+					th:href="${#httpServletRequest.getContextPath()+'/admin/entidad/eliminar/' + stm.id} "
+					sec:authorize="hasAuthority('ADMIN')">Delete</a></td>
+			</tr>
+		</table>
+		<a
+			th:href="${#httpServletRequest.getContextPath()+'/admin/entidad/alta'}"
+			class="btn btn-outline-primary" sec:authorize="hasAuthority('ADMIN')"
+			role="button">New</a> <a
+			th:href="${#httpServletRequest.getContextPath()+'/servicio/report/download/pdf'}"
+			class="btn btn-outline-primary" sec:authorize="hasAuthority('USER')"
+			title="Descargar formato PDF" role="button">PDF</a> <a
+			th:href="${#httpServletRequest.getContextPath()+'/servicio/report/download/xls'}"
+			class="btn btn-outline-primary" sec:authorize="hasAuthority('USER')"
+			title="Descargar formato excell" role="button">XLS</a>
+	</div>
 </div>
 
 <div th:fragment="toast" class="mensajeToast">
