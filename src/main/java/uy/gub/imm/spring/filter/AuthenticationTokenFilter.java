@@ -1,6 +1,8 @@
 package uy.gub.imm.spring.filter;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -32,6 +34,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+		logger.info("BEGIN doFilterInternal");
 		try {
 			String token = extraerToken(request);
 			if (token != null && jwt.authenticarToken(token)) {
@@ -40,12 +43,16 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
 						userdetails.getUsername(), null, userdetails.getAuthorities());
 				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				logger.info("Vigencia hasta " + jwt.obtenerFechaExpiracion(token));
+				Date fecha = jwt.obtenerFechaExpiracion(token);
+				SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyy hh:mm:ss");
+				String vigencia = formato.format(fecha);
+				logger.info("Vigencia hasta " + vigencia);
 				SecurityContextHolder.getContext().setAuthentication(authToken);
 			}
 		} catch (Exception e) {
 			logger.info("AuthenticationTokenFilter:doFilterInternal " + e.getMessage());
 		}
+		logger.info("END doFilterInternal");
 		filterChain.doFilter(request, response);
 	}
 

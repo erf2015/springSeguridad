@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import uy.gub.imm.spring.jpa.Rol;
 import uy.gub.imm.spring.jpa.Usuario;
 import uy.gub.imm.spring.repositorios.RolRepositorio;
@@ -65,6 +71,17 @@ public class JWTRestController {
 		return ResponseEntity.ok().body("API works");
 	}
 
+	@Operation(description = "Autenticar las credenciales de un usuario que esta accediendo a la API", summary = "Operación de autenticar contra BD")
+	@ApiResponses(value = {
+			@ApiResponse(
+					responseCode = "200", 
+					description = "Usuario autenticado correctamente", 
+					content = @Content(mediaType = "application/json", 
+					schema = @Schema(implementation = JWTResponseToken.class))),
+			@ApiResponse(
+					responseCode = "404", 
+					description = "El usuario no existe en el sistema" 
+					)})
 	@RequestMapping(path = "/authenticar", method = RequestMethod.POST)
 	public ResponseEntity<Object> validarToken(@Valid @RequestBody JWTRequestToken request) {
 		try {

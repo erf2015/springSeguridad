@@ -71,9 +71,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		logger.info("handleMethodArgumentNotValid  " + ex.getMessage());
 		List<String> erroresList = ex.getBindingResult().getFieldErrors().stream()
 				.map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
-		DetalleError error = new DetalleError(HttpStatus.BAD_REQUEST, erroresList, LocalDateTime.now(),
+		DetalleError error = new DetalleError(HttpStatus.NOT_ACCEPTABLE, erroresList, LocalDateTime.now(),
 				ex.getMessage());
-		return handleExceptionInternal(ex, error, headers, status, request);
+		return handleExceptionInternal(ex, error, headers, error.getStatus(), request);
 	}
 
 	/**
