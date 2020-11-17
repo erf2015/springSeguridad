@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +62,7 @@ public class JwtUtils implements Serializable {
 
 	public boolean authenticarToken(String token) {
 		try {
-			Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+			Jwts.parser().setSigningKey(getKey()).parseClaimsJws(token);
 			return true;
 		} catch (SignatureException e) {
 			logger.error("Invalid JWT signature: {}", e.getMessage());
@@ -78,7 +79,7 @@ public class JwtUtils implements Serializable {
 	}
 
 	private Claims obtenerTodosClaims(String token) {
-		return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+		return Jwts.parser().setSigningKey(getKey()).parseClaimsJws(token).getBody();
 	}
 
 	private boolean isTokenExpirado(String token) {
@@ -89,7 +90,7 @@ public class JwtUtils implements Serializable {
 		return Jwts.builder().setClaims(claims).setSubject(userdetails.getUsername())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
-				.signWith(SignatureAlgorithm.HS512, key).compact();
+				.signWith(SignatureAlgorithm.HS512, getKey()).compact();
 	}
 
 	public Object extraerAuthorities(HttpServletRequest request) {
@@ -100,5 +101,9 @@ public class JwtUtils implements Serializable {
 			return claims.get("roles");
 		}
 		return null;
+	}
+
+	private String getKey() {
+		return DatatypeConverter.printBase64Binary(key.getBytes());
 	}
 }

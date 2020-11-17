@@ -125,7 +125,8 @@
 			<version>2.9.2</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations -->
+		<!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations 
+			Anotaciones para documentar la API -->
 		<dependency>
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-annotations</artifactId>
