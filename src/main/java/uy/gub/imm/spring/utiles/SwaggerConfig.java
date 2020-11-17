@@ -26,9 +26,8 @@ public class SwaggerConfig {
 	}
 
 	private ApiInfo getApiInfo() {
-		ApiInfo info = new ApiInfo("Title", "description", "Version 0.0.1",
-				"http://localhost:8081/Seguridad/swagger-ui.html ", new Contact("fernando", "", "admin@gmail.com"),
-				"license", "licenseUrl", Collections.emptyList());
+		ApiInfo info = new ApiInfo("Title", "description", "Version 0.0.1", "http://localhost:8081/Seguridad/ ",
+				new Contact("fernando", "", "admin@gmail.com"), "license", "licenseUrl", Collections.emptyList());
 		return info;
 	}
 }
