@@ -93,14 +93,6 @@ public class PublicController {
 			repoEntidad.save(uno);
 			id++;
 		}
-		/*
-		 * StmEntidad uno = new StmEntidad(1L, "Primer elemento", new Date(), 1);
-		 * StmEntidad dos = new StmEntidad(2L, "Segundo elemento", new Date(), 2);
-		 * StmEntidad tres = new StmEntidad(3L, "Tercer elemento", new Date(), 3);
-		 * StmEntidad cuatro = new StmEntidad(4L, "Cuarto elemento", new Date(), 4);
-		 * repoEntidad.save(uno); repoEntidad.save(dos); repoEntidad.save(tres);
-		 * repoEntidad.save(cuatro);
-		 */
 		// Usuario: USER/ADMIN Contraseña 1234
 		Usuario admin = new Usuario();
 		admin.setPassword("$2a$04$C7bQ5SCtEiGwiZLma7l2u.k/WFnTUaRyLfQcQIOuY4o30.QCKFeqK");// 1234
@@ -136,8 +128,12 @@ public class PublicController {
 		Set<Rol> userAutoritiess = new HashSet<>();
 		userAutoritiess.add(us);
 		user.setAuthority(userAutoritiess);
-		repoUser.save(admin);
-		repoUser.save(user);
+		try {
+			repoUser.save(admin);
+			repoUser.save(user);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 		logger.info("Inicialización correcta de la Base con datos y usuarios " + servletContextPath);
 		cargaInicial();
 	}

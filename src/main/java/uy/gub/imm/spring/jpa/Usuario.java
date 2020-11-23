@@ -20,10 +20,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import uy.gub.imm.spring.jpa.validators.annotations.ComparaContrasennaAnotacion;
+import uy.gub.imm.spring.jpa.validators.annotations.CompararFechasAnotacion;
+import uy.gub.imm.spring.jpa.validators.annotations.UsuarioUnicoAnotacion;
 
 @Entity
 @Table(name = "USER")
-@ComparaContrasennaAnotacion(confirmacion = "confirm", password = "password")//, message = "No-------------------------"
+@ComparaContrasennaAnotacion(confirmacion = "confirm", password = "password")
+@CompararFechasAnotacion(fechaDos = "fechaBaja", fechaUno = "fechaAlta")
 public class Usuario {
 
 	@Id
@@ -32,6 +35,9 @@ public class Usuario {
 
 	@Column
 	@NotBlank(message = "El email es requerido")
+	//https://stackoverflow.com/questions/13599821/autowired-repository-is-null-in-custom-constraint-validator
+	//al tratar de usar la validaci'on para campo 'unico me encuentro con el error
+	//que el repositorio esta null
 	private String username;
 
 	@Column

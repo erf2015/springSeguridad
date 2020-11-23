@@ -9,31 +9,29 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import uy.gub.imm.spring.jpa.validators.PasswordValidator;
+import uy.gub.imm.spring.jpa.validators.FechaValidator;
 
-//https://www.javadevjournal.com/spring-mvc/spring-mvc-custom-validator/
-//https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#validator-customconstraints
-@Constraint(validatedBy = PasswordValidator.class)
-@Documented
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ComparaContrasennaAnotacion {
+@Constraint(validatedBy = FechaValidator.class)
+@Documented
+public @interface CompararFechasAnotacion {
 
-	String message() default "Las contrasennas no coinciden Anotaci'on controller.";
+	String message() default "La fecha uno debe anterior a la fecha dos.";
 
 	Class<?>[] groups() default {};
 
 	Class<? extends Payload>[] payload() default {};
 
-	String password();
+	String fechaUno();
 
-	String confirmacion();
+	String fechaDos();
 
 	@Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE })
 	@Retention(RetentionPolicy.RUNTIME)
 	@Documented
 	@interface List {
-		ComparaContrasennaAnotacion[] valores();
+		CompararFechasAnotacion[] fechas();
 	}
 
 }
