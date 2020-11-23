@@ -22,6 +22,7 @@ import javax.validation.constraints.Size;
 import uy.gub.imm.spring.jpa.validators.annotations.ComparaContrasennaAnotacion;
 import uy.gub.imm.spring.jpa.validators.annotations.CompararFechasAnotacion;
 import uy.gub.imm.spring.jpa.validators.annotations.UsuarioUnicoAnotacion;
+import uy.gub.imm.spring.servicios.CampoUnicoDelObjetoExtends;
 
 @Entity
 @Table(name = "USER")
@@ -35,9 +36,7 @@ public class Usuario {
 
 	@Column
 	@NotBlank(message = "El email es requerido")
-	//https://stackoverflow.com/questions/13599821/autowired-repository-is-null-in-custom-constraint-validator
-	//al tratar de usar la validaci'on para campo 'unico me encuentro con el error
-	//que el repositorio esta null
+	//@UsuarioUnicoAnotacion(username = "username", fieldName = "email", service = CampoUnicoDelObjetoExtends.class)
 	private String username;
 
 	@Column

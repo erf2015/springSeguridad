@@ -132,7 +132,7 @@ public class PublicController {
 			repoUser.save(admin);
 			repoUser.save(user);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		logger.info("Inicialización correcta de la Base con datos y usuarios " + servletContextPath);
 		cargaInicial();

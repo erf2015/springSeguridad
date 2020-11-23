@@ -10,6 +10,7 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 import uy.gub.imm.spring.jpa.validators.EmailUsuarioUnicoValidator;
+import uy.gub.imm.spring.servicios.CampoUnicoDelObjeto;
 
 @Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
@@ -22,6 +23,12 @@ public @interface UsuarioUnicoAnotacion {
 	Class<?>[] groups() default {};
 
 	Class<? extends Payload>[] payload() default {};
+
+	Class<? extends CampoUnicoDelObjeto> service();
+
+	String serviceQualifier() default "";
+
+	String fieldName();
 
 	String username();
 
