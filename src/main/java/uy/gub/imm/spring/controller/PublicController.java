@@ -104,6 +104,7 @@ public class PublicController {
 		// Usuario: USER/ADMIN Contraseña 1234
 		Usuario admin = new Usuario();
 		admin.setPassword("$2a$04$C7bQ5SCtEiGwiZLma7l2u.k/WFnTUaRyLfQcQIOuY4o30.QCKFeqK");// 1234
+		admin.setConfirm("$2a$04$C7bQ5SCtEiGwiZLma7l2u.k/WFnTUaRyLfQcQIOuY4o30.QCKFeqK");
 		admin.setUsername("admin@gmail.com");
 		admin.setNombre("Fernando");
 		admin.setApellido("AAAA");
@@ -125,6 +126,7 @@ public class PublicController {
 
 		Usuario user = new Usuario();
 		user.setPassword("$2a$04$C7bQ5SCtEiGwiZLma7l2u.k/WFnTUaRyLfQcQIOuY4o30.QCKFeqK");// 1234
+		user.setConfirm("$2a$04$C7bQ5SCtEiGwiZLma7l2u.k/WFnTUaRyLfQcQIOuY4o30.QCKFeqK");
 		user.setUsername("user@gmail.com");
 		user.setNombre("Fernando");
 		user.setApellido("AAAA");
@@ -134,7 +136,6 @@ public class PublicController {
 		Set<Rol> userAutoritiess = new HashSet<>();
 		userAutoritiess.add(us);
 		user.setAuthority(userAutoritiess);
-
 		repoUser.save(admin);
 		repoUser.save(user);
 		logger.info("Inicialización correcta de la Base con datos y usuarios " + servletContextPath);

@@ -78,6 +78,11 @@
 													<p th:text="${message['NotBlank.password']}"></p>
 												</div>
 												<div
+													th:if="${message != null && message['ComparaContrasennaAnotacion'] != null}">
+													<p
+														th:text="${message['ComparaContrasennaAnotacion']}"></p>
+												</div>
+												<div
 													th:if="${message != null && message['Size.password'] != null}">
 													<p th:text="${message['Size.password']}"></p>
 												</div>
