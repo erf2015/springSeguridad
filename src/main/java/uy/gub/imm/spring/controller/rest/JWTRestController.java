@@ -2,6 +2,7 @@ package uy.gub.imm.spring.controller.rest;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -65,6 +66,12 @@ public class JWTRestController {
 	public ResponseEntity<Object> home() {
 		logger.info("API works");
 		return ResponseEntity.ok().body("API works");
+	}
+
+	@RequestMapping(path = "usuarios")
+	public ResponseEntity<Object> obtenerUsuarios() {
+		List<Usuario> users = repoUser.findAll();
+		return ResponseEntity.ok().body(users);
 	}
 
 	@RequestMapping(path = "/authenticar", method = RequestMethod.POST)
