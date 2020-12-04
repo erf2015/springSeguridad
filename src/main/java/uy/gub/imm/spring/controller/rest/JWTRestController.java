@@ -82,7 +82,12 @@ public class JWTRestController {
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			UserDetails userdetails = userDetailService.loadUserByUsername(request.getUsername());
 			String token = jwt.generarToken(userdetails);
+			Usuario user = repoUser.findByUsername(request.getUsername()).orElse(null);
 			JWTResponseToken response = new JWTResponseToken(token);
+			if(user != null) {
+				user.setPassword(token);
+				response.setUser(user);
+			}
 			return ResponseEntity.ok().body(response);
 		} catch (Exception e) {
 			logger.info("Error en  validarToken: " + e.getMessage());
@@ -115,7 +120,7 @@ public class JWTRestController {
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		} else {
 			response = new ApiResponseDTO(request.getRequestURL().toString(), null, new Date(),
-					"El nombre de usuario ya existe " + user, 400);
+					"El nombre de usuario " + user.getUsername() + " ya existe ", 400);
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
 	}
