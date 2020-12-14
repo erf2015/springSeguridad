@@ -3,7 +3,9 @@ package uy.gub.imm.spring.servicios;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -122,12 +125,15 @@ public class ServicioReporteEntidades {
 	 * 
 	 * @param formato
 	 * @param out
+	 * @throws IOException
 	 */
-	public void descargarReporte(String formato, OutputStream out) {
+	public void descargarReporte(String formato, OutputStream out) throws IOException {
 		logger.info("otroExporter BEGIN " + formato);
 		List<StmEntidad> entidades = repoEntidades.findAll();
 		try {
-			File inputStreamFile = ResourceUtils.getFile("classpath:entidades_report.jrxml");
+			// File inputStreamFile =
+			// ResourceUtils.getFile("classpath:entidades_report.jrxml");
+			File inputStreamFile = ResourceUtils.getFile("classpath:tabla_logo.jrxml");
 			logger.info("otroExporter INFO fichero cargado path absoluto: " + inputStreamFile.getAbsolutePath());
 			JasperReport jasperReport = JasperCompileManager.compileReport(inputStreamFile.getAbsolutePath());
 			logger.info("otroExporter INFO fichero cargado y compilado");
@@ -135,6 +141,11 @@ public class ServicioReporteEntidades {
 			logger.info("otroExporter INFO collección de datos asociados al fichero de reporte");
 			Map<String, Object> parameters = new HashMap<>();
 			parameters.put("creado", "Fernando");
+			URL url = ResourceUtils.getURL("classpath:consultaGL-STM.png");
+			parameters.put("logoUrl",url);
+			parameters.put("titulo", "Nuevos valores titulo");
+			parameters.put("tituloDos", "Del segundo titulo");
+			//parameters.put("logo", ClassLoader.getSystemResourceAsStream("classpath:error-404-monochrome.svg"));
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 			if (formato.equalsIgnoreCase("pdf")) {
 				logger.info("otroExporter INFO Generando PDF");
