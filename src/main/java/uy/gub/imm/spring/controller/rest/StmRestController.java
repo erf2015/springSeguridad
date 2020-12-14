@@ -106,13 +106,78 @@ public class StmRestController {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Entidad eliminada.");
 	}
 
-	@GetMapping(path = "/all/user")
-	@PreAuthorize(value = "hasAuthority('ADMIN')")
+	@GetMapping(path = "/user/all")
+	@PreAuthorize(value = "hasAuthority('USER')")
 	public ResponseEntity<Object> allUser() {
 		List<Usuario> users = repoUser.findAll();
 		ApiResponseDTO response = new ApiResponseDTO(request.getRequestURL().toString(),
 				jwt.extraerAuthorities(request), new Date(), users, HttpStatus.OK.value());
-		return ResponseEntity.ok().body(response);
+		// return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().body(users);
+	}
+
+	@PostMapping(path = "/user/add")
+	//@RequestMapping(path = "/user/add", method = RequestMethod.POST)
+	@PreAuthorize(value = "hasAuthority('ADMIN')")
+	public ResponseEntity<Object> adicionarUsuario(@Valid Usuario nuevo) {
+		logger.info("adicionarUsuario: " + nuevo);
+		Usuario verificar = repoUser.findByUsername(nuevo.getUsername()).orElse(null);
+		if (verificar == null) {
+			repoUser.save(nuevo);
+		} else {
+			logger.info("adicionarUsuario: " + "Usuario ya existe");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body("El usuario con nombre " + nuevo.getUsername() + " ya existe");
+		}
+		logger.info("adicionarUsuario: " + "Usuario creado correctamente");
+		return ResponseEntity.ok().body("Usuario creado correctamente");
+	}
+
+	@PostMapping(path = "/user/editar")
+	//@RequestMapping(path = "/user/editar", method = RequestMethod.POST)
+	@PreAuthorize(value = "hasAuthority('USER')")
+	public ResponseEntity<Object> editarDatosUsuario(@Valid Usuario nuevo) {
+		logger.info("editarDatosUsuario: " + nuevo);
+		Usuario verificar = repoUser.findByUsername(nuevo.getUsername()).orElse(null);
+		if (verificar != null) {
+			repoUser.save(nuevo);
+		} else {
+			logger.info("adicionarUsuario: " + "Usuario no existe");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body("El usuario con nombre " + nuevo.getUsername() + " no existe");
+		}
+		logger.info("adicionarUsuario: " + "Usuario editado correctamente");
+		return ResponseEntity.ok().body("Usuario editado correctamente");
+	}
+
+	@DeleteMapping(path = "/user/baja")
+	//@RequestMapping(path = "/user/baja", method = RequestMethod.DELETE)
+	@PreAuthorize(value = "hasAuthority('ADMIN')")
+	public ResponseEntity<Object> bajaUsuario(Long idUsuario) {
+		logger.info("bajaUsuario: " + idUsuario);
+		Usuario verificar = repoUser.findById(idUsuario).orElse(null);
+		if (verificar != null) {
+			repoUser.deleteById(idUsuario);
+		} else {
+			logger.info("adicionarUsuario: " + "Usuario no existe");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El usuario con id " + idUsuario + " no existe");
+		}
+		logger.info("adicionarUsuario: " + "Usuario dado de baja correctamente");
+		return ResponseEntity.ok().body("Usuario dado de baja correctamente");
+	}
+	@GetMapping(path = "/user/get/{id}")
+	//@RequestMapping(path = "/user/get/{id}", method = RequestMethod.GET)
+	@PreAuthorize(value = "hasAuthority('USER')")
+	public ResponseEntity<Object> obteneUsuarioPorId(@PathVariable(name = "id") Long id) {
+		logger.info("obteneUsuarioPorId " + id);
+		Usuario buscar = repoUser.findById(id).orElse(null);
+		if (buscar != null) {
+			logger.info("Usuario  " + buscar.getNombre());
+			return ResponseEntity.ok().body(buscar);
+		} else {
+			logger.info("El usuario con id " + id + " no existe.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El usuario no id " + id + " no existe.");
+		}
 	}
 
 }

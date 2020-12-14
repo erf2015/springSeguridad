@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.exception.DataException;
 import org.slf4j.Logger;
@@ -14,20 +15,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import lombok.extern.slf4j.Slf4j;
 import uy.gub.imm.spring.excepciones.EntityNotFound;
 import uy.gub.imm.spring.utiles.DetalleError;
 
 @ControllerAdvice
-@RestController
-@Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
@@ -88,6 +87,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		errorList.add("Ocurrió un error al parsear la estructura del objeto enviado.");
 		DetalleError error = new DetalleError(HttpStatus.BAD_REQUEST, errorList, LocalDateTime.now(), ex.getMessage());
 		return handleExceptionInternal(ex, error, headers, status, request);
+	}
+
+	@ExceptionHandler(AuthenticationException.class)
+	public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex,
+			HttpServletResponse response) {
+		logger.info("AuthenticationException " + ex.getMessage());
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{ \"error\": \"" + ex.getMessage() + "\" }");
+	}
+/*
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex, HttpServletResponse response) {
+		logger.info("AccessDeniedException " + ex.getMessage());
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{ \"error\": \"" + ex.getMessage() + "\" }");
+	}
+*/
+	@ExceptionHandler({ AccessDeniedException.class })
+	public ResponseEntity<Object> handleAccessDeniedException(Exception ex, WebRequest request) {
+	logger.info("AccessDeniedException " + ex.getMessage());
+		return new ResponseEntity<Object>("{ \"error\": \"" + ex.getMessage() + "\" }", new HttpHeaders(),
+				HttpStatus.FORBIDDEN);
 	}
 
 }
