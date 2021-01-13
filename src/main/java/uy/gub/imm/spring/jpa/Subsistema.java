@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "SUBSISTEMA")
@@ -24,6 +26,8 @@ public class Subsistema implements Serializable {
 	private Long id;
 
 	@Column
+	@NotBlank(message = "El subsistema requiere un nombre o descripción")
+	@Size(min = 4, message = "El nombre o descripción del subsistema debe tener 4 o más caracteres.")
 	private String descripcion;
 
 	public Subsistema(String descripcion) {

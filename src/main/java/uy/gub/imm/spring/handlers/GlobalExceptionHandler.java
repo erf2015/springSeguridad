@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +22,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import uy.gub.imm.spring.excepciones.DatoInvalidoException;
 import uy.gub.imm.spring.excepciones.EntityNotFound;
+import uy.gub.imm.spring.excepciones.ErrorInternoException;
 import uy.gub.imm.spring.utiles.DetalleError;
 
 @ControllerAdvice
@@ -33,13 +34,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	// Excepciones de negocio que puede lanzar la aplicaci'on
 
-	@ExceptionHandler(value = { DataException.class })
+	@ExceptionHandler(value = { DatoInvalidoException.class })
 	public ResponseEntity<Object> dataException(Exception ex, WebRequest request) {
-		logger.info("@ExceptionHandler DataException " + ex.getMessage());
+		logger.info("@ExceptionHandler DatoInvalidoException " + ex.getMessage());
 		List<String> erroresList = new ArrayList<>();
 		erroresList.add(ex.getMessage());
 		erroresList.add(request.getDescription(true));
-		DetalleError error = new DetalleError(HttpStatus.INTERNAL_SERVER_ERROR, erroresList, LocalDateTime.now(),
+		DetalleError error = new DetalleError(HttpStatus.CONFLICT, erroresList, LocalDateTime.now(),
 				"Regla de negocio: " + ex.getMessage());
 		return handleExceptionInternal(ex, error, new HttpHeaders(), error.getStatus(), request);
 	}
@@ -51,6 +52,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		erroresList.add(ex.getMessage());
 		erroresList.add(request.getDescription(true));
 		DetalleError error = new DetalleError(HttpStatus.NOT_FOUND, erroresList, LocalDateTime.now(), ex.getMessage());
+		return handleExceptionInternal(ex, error, new HttpHeaders(), error.getStatus(), request);
+	}
+
+	@ExceptionHandler(value = { ErrorInternoException.class })
+	public ResponseEntity<Object> errorInterno(Exception ex, WebRequest request) {
+		logger.info("@ExceptionHandler ErrorInternoException " + ex.getMessage());
+		List<String> erroresList = new ArrayList<>();
+		erroresList.add(ex.getMessage());
+		erroresList.add(request.getDescription(true));
+		DetalleError error = new DetalleError(HttpStatus.INTERNAL_SERVER_ERROR, erroresList, LocalDateTime.now(),
+				ex.getMessage());
 		return handleExceptionInternal(ex, error, new HttpHeaders(), error.getStatus(), request);
 	}
 
@@ -95,16 +107,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		logger.info("AuthenticationException " + ex.getMessage());
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{ \"error\": \"" + ex.getMessage() + "\" }");
 	}
-/*
-	@ExceptionHandler(AccessDeniedException.class)
-	public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex, HttpServletResponse response) {
-		logger.info("AccessDeniedException " + ex.getMessage());
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{ \"error\": \"" + ex.getMessage() + "\" }");
-	}
-*/
+
+	/*
+	 * @ExceptionHandler(AccessDeniedException.class) public ResponseEntity<Object>
+	 * handleAccessDeniedException(AccessDeniedException ex, HttpServletResponse
+	 * response) { logger.info("AccessDeniedException " + ex.getMessage()); return
+	 * ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{ \"error\": \"" +
+	 * ex.getMessage() + "\" }"); }
+	 */
 	@ExceptionHandler({ AccessDeniedException.class })
 	public ResponseEntity<Object> handleAccessDeniedException(Exception ex, WebRequest request) {
-	logger.info("AccessDeniedException " + ex.getMessage());
+		logger.info("AccessDeniedException " + ex.getMessage());
 		return new ResponseEntity<Object>("{ \"error\": \"" + ex.getMessage() + "\" }", new HttpHeaders(),
 				HttpStatus.FORBIDDEN);
 	}

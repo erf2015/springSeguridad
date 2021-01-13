@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "INSTITUCION")
@@ -24,6 +26,8 @@ public class Institucion implements Serializable {
 	private Long id;
 
 	@Column
+	@NotBlank(message = "La institución requiere un nombre o descripción")
+	@Size(min = 4, message = "El nombre o descripción de la institución debe tener 4 o más caracteres.")
 	private String descripcion;
 
 	public Institucion(String descripcion) {

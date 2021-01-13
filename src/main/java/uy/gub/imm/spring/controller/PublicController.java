@@ -104,13 +104,17 @@ public class PublicController {
 		adm.setAuthority("ADMIN");
 		Rol us = new Rol();
 		us.setAuthority("USER");
+		Rol editor = new Rol();
+		editor.setAuthority("EDITOR");
 
 		adm = repoRol.save(adm);
 		us = repoRol.save(us);
+		editor = repoRol.save(editor);
 
 		Set<Rol> adminAutoritiess = new HashSet<>();
 		adminAutoritiess.add(adm);
 		adminAutoritiess.add(us);
+		adminAutoritiess.add(editor);
 		admin.setAuthority(adminAutoritiess);
 
 		Usuario user = new Usuario();

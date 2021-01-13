@@ -150,10 +150,10 @@ public class StmRestController {
 		return ResponseEntity.ok().body("Usuario editado correctamente");
 	}
 
-	@DeleteMapping(path = "/user/baja")
+	@DeleteMapping(path = "/user/baja/{id}")
 	//@RequestMapping(path = "/user/baja", method = RequestMethod.DELETE)
 	@PreAuthorize(value = "hasAuthority('ADMIN')")
-	public ResponseEntity<Object> bajaUsuario(Long idUsuario) {
+	public ResponseEntity<Object> bajaUsuario(@PathVariable(name = "id") Long  idUsuario) {
 		logger.info("bajaUsuario: " + idUsuario);
 		Usuario verificar = repoUser.findById(idUsuario).orElse(null);
 		if (verificar != null) {

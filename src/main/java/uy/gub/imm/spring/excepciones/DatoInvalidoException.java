@@ -1,6 +1,6 @@
 package uy.gub.imm.spring.excepciones;
 
-public class DataException extends Exception {
+public class DatoInvalidoException extends Exception {
 
 	/**
 	 * 
@@ -9,11 +9,11 @@ public class DataException extends Exception {
 
 	private String causa;
 
-	public DataException(String msg) {
+	public DatoInvalidoException(String msg) {
 		super(msg);
 	}
 
-	public DataException(String msg, String causa) {
+	public DatoInvalidoException(String msg, String causa) {
 		super(msg);
 		this.causa = causa;
 	}

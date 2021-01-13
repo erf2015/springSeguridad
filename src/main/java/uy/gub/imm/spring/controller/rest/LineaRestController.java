@@ -12,12 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import uy.gub.imm.spring.dto.MensajeStatus;
+import uy.gub.imm.spring.excepciones.DatoInvalidoException;
+import uy.gub.imm.spring.excepciones.EntityNotFound;
+import uy.gub.imm.spring.excepciones.ErrorInternoException;
 import uy.gub.imm.spring.jpa.Linea;
 import uy.gub.imm.spring.repositorios.LineaRepositorio;
 import uy.gub.imm.spring.repositorios.SubsistemaRepositorio;
@@ -26,7 +33,8 @@ import uy.gub.imm.spring.utiles.Estados;
 
 @RestController
 @RequestMapping(path = "/servicio/linea")
-@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST })
+@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+		RequestMethod.DELETE })
 public class LineaRestController {
 
 	private Logger logger = LoggerFactory.getLogger(LineaRestController.class);
@@ -40,10 +48,10 @@ public class LineaRestController {
 	@Autowired
 	private SubsistemaRepositorio repoSubsistema;
 
-	@GetMapping(path = "/add", produces = { "application/json" })
+	@PostMapping(path = "/add", produces = { "application/json" })
 	public ResponseEntity<MensajeStatus> adicionarLinea(@PathParam("nombre") String nombre,
 			@PathParam("codigoSub") Long codigoSub, @PathParam("tipoLinea") Long tipoLinea,
-			@PathParam("fecha") String fecha) {
+			@PathParam("fecha") String fecha) throws ErrorInternoException, DatoInvalidoException {
 		String method = "adicionarLinea";
 		logger.info(Estados.BEGIN + " " + method + " parámetros {nombre} " + nombre + " {subistema} " + codigoSub
 				+ " {tipoLinea} " + tipoLinea + " {fecha} " + fecha);
@@ -53,7 +61,8 @@ public class LineaRestController {
 			if (lineas != null) {
 				msg = new MensajeStatus("Ya existe una línea con ese nombre.", 409);
 				logger.info(Estados.ERROR + " " + method + " Ya existe una línea con ese nombre.");
-				return new ResponseEntity<MensajeStatus>(msg, HttpStatus.OK);
+				// return new ResponseEntity<MensajeStatus>(msg, HttpStatus.OK);
+				throw new DatoInvalidoException(" Ya existe una línea con ese nombre.");
 			} else {
 				Linea nueva = new Linea();
 				nueva.setNombre(nombre);
@@ -71,8 +80,9 @@ public class LineaRestController {
 			}
 		} catch (Exception e) {
 			logger.info(Estados.ERROR + " " + method + " Error inesperado " + e.getMessage());
-			msg = new MensajeStatus(" Error inesperado " + e.getMessage(), 500);
-			return new ResponseEntity<MensajeStatus>(msg, HttpStatus.OK); 
+			// msg = new MensajeStatus(" Error inesperado " + e.getMessage(), 500);
+			// return new ResponseEntity<MensajeStatus>(msg, HttpStatus.OK);
+			throw new ErrorInternoException(e.getMessage());
 		}
 	}
 
@@ -83,6 +93,90 @@ public class LineaRestController {
 		List<Linea> lineas = repoLinea.findAll();
 		logger.info(Estados.SUCCES + " " + method + " Cantidad de líneas " + lineas.size());
 		return ResponseEntity.ok().body(lineas);
+	}
+
+	@PutMapping(path = "/edit")
+	public ResponseEntity<Object> editarLinea(Linea cambio)
+			throws DatoInvalidoException, ErrorInternoException, EntityNotFound {
+		String method = "editarLineas";
+		logger.info(Estados.BEGIN + " " + method);
+		if (cambio == null) {
+			logger.info(Estados.ERROR + " " + method + " El objeto a editar no puede estar vacío");
+			throw new DatoInvalidoException(" El objeto a editar no puede estar vacío");
+		}
+		if (cambio.getId() == null) {
+			logger.info(Estados.ERROR + " " + method + " El id del objeto a editar no puede estar vacío");
+			throw new DatoInvalidoException(" El id del objeto a editar no puede estar vacío");
+		}
+		Linea linea = repoLinea.findById(cambio.getId()).orElse(null);
+		if (linea == null) {
+			logger.info(Estados.ERROR + " " + method + "No existe una línea con id " + cambio.getId());
+			throw new EntityNotFound("No existe una línea con id " + cambio.getId());
+		}
+		try {
+			linea.setEmpresa(cambio.getEmpresa());
+			linea.setFechaVigencia(cambio.getFechaVigencia());
+			linea.setNombre(cambio.getNombre());
+			linea.setPublicableWebDesde(cambio.getPublicableWebDesde());
+			linea.setPublicableWebHasta(cambio.getPublicableWebHasta());
+			linea.setSubsistema(cambio.getSubsistema());
+			linea.setSublineas(cambio.getSublineas());
+			linea.setTarifaXKm(cambio.getTarifaXKm());
+			linea.setTipoLinea(cambio.getTipoLinea());
+			repoLinea.save(linea);
+			logger.info(Estados.SUCCES + " " + method);
+			return ResponseEntity.ok().build();
+		} catch (Exception e) {
+			logger.info(Estados.ERROR + " " + method + " Error inesperado " + e.getMessage());
+			throw new ErrorInternoException(e.getMessage());
+		}
+	}
+
+	@DeleteMapping(path = "/delete/{id}")
+	public ResponseEntity<Object> bajaLinea(@PathVariable(name = "id") Long idLinea)
+			throws EntityNotFound, DatoInvalidoException, ErrorInternoException {
+		String method = "bajaLinea";
+		logger.info(Estados.BEGIN + " " + method);
+		if (idLinea == null) {
+			logger.info(Estados.ERROR + " " + method);
+			throw new DatoInvalidoException("El id del objeto no puede estar vacío");
+		}
+		Linea linea = repoLinea.findById(idLinea).orElse(null);
+		if (linea == null) {
+			logger.info(Estados.ERROR + " " + method + " No existe una línea con id " + idLinea);
+			throw new EntityNotFound("No existe una línea con id " + idLinea);
+		}
+		try {
+			repoLinea.delete(linea);
+			logger.info(Estados.SUCCES + " " + method);
+			return ResponseEntity.noContent().build();
+		} catch (Exception e) {
+			logger.info(Estados.ERROR + " " + method + " " + e.getMessage());
+			throw new ErrorInternoException(e.getMessage());
+		}
+	}
+
+	@GetMapping(path = "/get/{id}", produces = { "application/json" })
+	public ResponseEntity<Object> obtenerLinea(@PathVariable(name = "id") Long idLinea)
+			throws EntityNotFound, DatoInvalidoException, ErrorInternoException {
+		String method = "obtenerLinea";
+		logger.info(Estados.BEGIN + " " + method);
+		if (idLinea == null) {
+			logger.info(Estados.ERROR + " " + method);
+			throw new DatoInvalidoException("El id del objeto no puede estar vacío");
+		}
+		Linea linea = repoLinea.findById(idLinea).orElse(null);
+		if (linea == null) {
+			logger.info(Estados.ERROR + " " + method + " No existe una línea con id " + idLinea);
+			throw new EntityNotFound("No existe una línea con id " + idLinea);
+		}
+		try {
+			logger.info(Estados.SUCCES + " " + method);
+			return ResponseEntity.ok().body(linea);
+		} catch (Exception e) {
+			logger.info(Estados.ERROR + " " + method + " " + e.getMessage());
+			throw new ErrorInternoException(e.getMessage());
+		}
 	}
 
 }

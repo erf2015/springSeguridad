@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "TIPO_LINEA")
@@ -24,6 +26,8 @@ public class TipoLinea implements Serializable {
 	private Long id;
 
 	@Column
+	@NotBlank(message = "El tipo de línea requiere un nombre o descripción")
+	@Size(min = 4, message = "El nombre o descripción del tipo de línea debe tener 4 o más caracteres.")
 	private String descripcion;
 
 	public TipoLinea(String descripcion) {
