@@ -47,18 +47,19 @@ public class TipoLineaController {
 			throws ErrorInternoException, DatoInvalidoException {
 		String method = "adicionarTipoLinea";
 		logger.info(Estados.BEGIN + " " + method);
+		List<TipoLinea> tipos = repoTipoLinea.findAll();
+		if (tipos != null
+				&& tipos.stream().filter(tipo -> Objects.equals(tipo.getDescripcion(), nuevo.getDescripcion()))
+						.findFirst().orElse(null) != null) {
+			logger.info(Estados.ERROR + " " + method + " Ya existe un tipo línea con ese nombre.");
+			throw new DatoInvalidoException(" Ya existe un tipo línea con ese nombre.");
+		}
 		try {
-			List<TipoLinea> tipos = repoTipoLinea.findAll();
-			if (tipos != null
-					&& tipos.stream().filter(tipo -> Objects.equals(tipo.getDescripcion(), nuevo.getDescripcion()))
-							.findFirst().orElse(null) != null) {
-				logger.info(Estados.ERROR + " " + method + " Ya existe un tipo línea con ese nombre.");
-				throw new DatoInvalidoException(" Ya existe un tipo línea con ese nombre.");
-			} else {
-				repoTipoLinea.save(nuevo);
-				logger.info(Estados.SUCCES + " " + method);
-				return ResponseEntity.ok().build();
-			}
+			nuevo.setId(null);
+			repoTipoLinea.save(nuevo);
+			logger.info(Estados.SUCCES + " " + method);
+			return ResponseEntity.ok().build();
+
 		} catch (Exception e) {
 			logger.info(Estados.ERROR + " " + method + " Error inesperado " + e.getMessage());
 			throw new ErrorInternoException(e.getMessage());
@@ -73,6 +74,7 @@ public class TipoLineaController {
 		logger.info(Estados.SUCCES + " " + method + " Cantidad de tipos  líneas " + tipos.size());
 		return ResponseEntity.ok().body(tipos);
 	}
+	
 
 	@PutMapping(path = "/edit", consumes = { "application/json" })
 	public ResponseEntity<Object> editarTipoLinea(@Valid @RequestBody TipoLinea cambio)

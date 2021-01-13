@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,9 +34,13 @@ import uy.gub.imm.spring.repositorios.TipoLineaRepositorio;
 import uy.gub.imm.spring.utiles.Estados;
 
 @RestController
-@RequestMapping(path = "/servicio/linea")
-@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+@RequestMapping(path = "/servicio/linea", method = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
 		RequestMethod.DELETE })
+@CrossOrigin(origins = "*")
+/*
+ * , methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+ * RequestMethod.DELETE }
+ */
 public class LineaRestController {
 
 	private Logger logger = LoggerFactory.getLogger(LineaRestController.class);
@@ -95,8 +101,8 @@ public class LineaRestController {
 		return ResponseEntity.ok().body(lineas);
 	}
 
-	@PutMapping(path = "/edit")
-	public ResponseEntity<Object> editarLinea(Linea cambio)
+	@PutMapping(path = "/edit", consumes = "application/json")
+	public ResponseEntity<Object> editarLinea(@Valid @RequestBody Linea cambio)
 			throws DatoInvalidoException, ErrorInternoException, EntityNotFound {
 		String method = "editarLineas";
 		logger.info(Estados.BEGIN + " " + method);
