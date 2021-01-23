@@ -36,11 +36,8 @@ import uy.gub.imm.spring.utiles.Estados;
 @RestController
 @RequestMapping(path = "/servicio/linea", method = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
 		RequestMethod.DELETE })
-@CrossOrigin(origins = "*")
-/*
- * , methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
- * RequestMethod.DELETE }
- */
+@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+		RequestMethod.DELETE })
 public class LineaRestController {
 
 	private Logger logger = LoggerFactory.getLogger(LineaRestController.class);

@@ -1,7 +1,6 @@
 package uy.gub.imm.spring.controller.rest;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.validation.Valid;
 
@@ -30,11 +29,8 @@ import uy.gub.imm.spring.utiles.Estados;
 @RestController
 @RequestMapping(path = "/servicio/tipolinea", method = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
 		RequestMethod.DELETE })
-@CrossOrigin(origins = "*")
-/*
- * methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
- * RequestMethod.DELETE }
- */
+@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+		RequestMethod.DELETE })
 public class TipoLineaController {
 
 	private Logger logger = LoggerFactory.getLogger(TipoLineaController.class);
@@ -58,7 +54,7 @@ public class TipoLineaController {
 			nuevo.setId(null);
 			repoTipoLinea.save(nuevo);
 			logger.info(Estados.SUCCES + " " + method);
-			return ResponseEntity.ok().build();
+			return ResponseEntity.ok().body(nuevo);
 
 		} catch (Exception e) {
 			logger.info(Estados.ERROR + " " + method + " Error inesperado " + e.getMessage());

@@ -35,6 +35,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 		try {
 			String token = extraerToken(request);
 			if (token != null && jwt.authenticarToken(token)) {
+				logger.info("doFilterInternal: Trae token, vamos a validarlo contra la base");
 				String nombre = jwt.obtenerNombre(token);
 				UserDetails userdetails = userDetailService.loadUserByUsername(nombre);
 				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

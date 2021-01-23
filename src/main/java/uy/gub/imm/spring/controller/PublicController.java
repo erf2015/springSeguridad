@@ -172,6 +172,25 @@ public class PublicController {
 		repoEmp.save(e);
 		repoEmp.save(f);
 		logger.info("CargaInicial terminanda instituciones");
+		Linea lUno = new Linea();
+		lUno.setEmpresa(a);
+		lUno.setFechaVigencia(LocalDate.now());
+		lUno.setNombre("A1");
+		lUno.setPublicableWebDesde(LocalDate.now());
+		lUno.setTarifaXKm("S");
+		lUno.setTipoLinea(dif);
+		lUno.setSubsistema(uno);
+		repoLineas.save(lUno);
+		Linea lDos = new Linea();
+		lDos.setEmpresa(b);
+		lDos.setFechaVigencia(LocalDate.now());
+		lDos.setNombre("B4");
+		lDos.setPublicableWebDesde(LocalDate.now());
+		lDos.setTarifaXKm("S");
+		lDos.setTipoLinea(tur);
+		lDos.setSubsistema(dos);
+		repoLineas.save(lDos);
+		logger.info("CargaInicial terminanda líneas");
 	}
 
 	@GetMapping("/")

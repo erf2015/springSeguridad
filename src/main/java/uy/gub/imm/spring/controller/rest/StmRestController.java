@@ -109,15 +109,17 @@ public class StmRestController {
 	@GetMapping(path = "/user/all")
 	@PreAuthorize(value = "hasAuthority('USER')")
 	public ResponseEntity<Object> allUser() {
+		logger.info("BEGIN allUser");
 		List<Usuario> users = repoUser.findAll();
 		ApiResponseDTO response = new ApiResponseDTO(request.getRequestURL().toString(),
 				jwt.extraerAuthorities(request), new Date(), users, HttpStatus.OK.value());
 		// return ResponseEntity.ok().body(response);
+		logger.info("SUCCESS allUser");
 		return ResponseEntity.ok().body(users);
 	}
 
 	@PostMapping(path = "/user/add")
-	//@RequestMapping(path = "/user/add", method = RequestMethod.POST)
+	// @RequestMapping(path = "/user/add", method = RequestMethod.POST)
 	@PreAuthorize(value = "hasAuthority('ADMIN')")
 	public ResponseEntity<Object> adicionarUsuario(@Valid Usuario nuevo) {
 		logger.info("adicionarUsuario: " + nuevo);
@@ -134,7 +136,7 @@ public class StmRestController {
 	}
 
 	@PostMapping(path = "/user/editar")
-	//@RequestMapping(path = "/user/editar", method = RequestMethod.POST)
+	// @RequestMapping(path = "/user/editar", method = RequestMethod.POST)
 	@PreAuthorize(value = "hasAuthority('USER')")
 	public ResponseEntity<Object> editarDatosUsuario(@Valid Usuario nuevo) {
 		logger.info("editarDatosUsuario: " + nuevo);
@@ -151,9 +153,9 @@ public class StmRestController {
 	}
 
 	@DeleteMapping(path = "/user/baja/{id}")
-	//@RequestMapping(path = "/user/baja", method = RequestMethod.DELETE)
+	// @RequestMapping(path = "/user/baja", method = RequestMethod.DELETE)
 	@PreAuthorize(value = "hasAuthority('ADMIN')")
-	public ResponseEntity<Object> bajaUsuario(@PathVariable(name = "id") Long  idUsuario) {
+	public ResponseEntity<Object> bajaUsuario(@PathVariable(name = "id") Long idUsuario) {
 		logger.info("bajaUsuario: " + idUsuario);
 		Usuario verificar = repoUser.findById(idUsuario).orElse(null);
 		if (verificar != null) {
@@ -165,8 +167,9 @@ public class StmRestController {
 		logger.info("adicionarUsuario: " + "Usuario dado de baja correctamente");
 		return ResponseEntity.ok().body("Usuario dado de baja correctamente");
 	}
+
 	@GetMapping(path = "/user/get/{id}")
-	//@RequestMapping(path = "/user/get/{id}", method = RequestMethod.GET)
+	// @RequestMapping(path = "/user/get/{id}", method = RequestMethod.GET)
 	@PreAuthorize(value = "hasAuthority('USER')")
 	public ResponseEntity<Object> obteneUsuarioPorId(@PathVariable(name = "id") Long id) {
 		logger.info("obteneUsuarioPorId " + id);
