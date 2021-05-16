@@ -1,0 +1,1 @@
+aqu[i voy a empezar a subir los cambios de mi test para consumir la api en spring desde fuera con js y con Vue.
