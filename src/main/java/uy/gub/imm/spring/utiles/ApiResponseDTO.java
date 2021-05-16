@@ -8,7 +8,7 @@ public class ApiResponseDTO {
 
 	private Date fechaRequest;
 
-	private Integer statusCode;
+	private Integer status;
 
 	private Object authorities;
 
@@ -20,7 +20,7 @@ public class ApiResponseDTO {
 		this.authorities = authorities;
 		this.fechaRequest = fechaRequest;
 		this.datos = datos;
-		this.statusCode = statusCode;
+		this.status = statusCode;
 	}
 
 	public String getRequestUrl() {
@@ -47,12 +47,12 @@ public class ApiResponseDTO {
 		this.datos = datos;
 	}
 
-	public Integer getStatusCode() {
-		return statusCode;
+	public Integer getStatus() {
+		return status;
 	}
 
-	public void setStatusCode(Integer statusCode) {
-		this.statusCode = statusCode;
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 	public Object getAuthorities() {

@@ -19,24 +19,31 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import uy.gub.imm.spring.excepciones.DatoInvalidoException;
+import uy.gub.imm.spring.excepciones.EntityNotFound;
+import uy.gub.imm.spring.excepciones.ErrorInternoException;
 import uy.gub.imm.spring.jpa.Rol;
 import uy.gub.imm.spring.jpa.Usuario;
 import uy.gub.imm.spring.repositorios.RolRepositorio;
 import uy.gub.imm.spring.repositorios.UsuarioRepositorio;
 import uy.gub.imm.spring.servicios.ServicioUsuarioImpl;
 import uy.gub.imm.spring.utiles.ApiResponseDTO;
+import uy.gub.imm.spring.utiles.Estados;
 import uy.gub.imm.spring.utiles.JWTRequestToken;
 import uy.gub.imm.spring.utiles.JWTResponseToken;
 import uy.gub.imm.spring.utiles.JwtUtils;
 
 @RestController
 @RequestMapping(path = "/jwt")
-@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST })
+@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE,
+		RequestMethod.PUT })
 public class JWTRestController {
 
 	private static final Logger logger = LoggerFactory.getLogger(JWTRestController.class);
@@ -84,14 +91,15 @@ public class JWTRestController {
 			String token = jwt.generarToken(userdetails);
 			Usuario user = repoUser.findByUsername(request.getUsername()).orElse(null);
 			JWTResponseToken response = new JWTResponseToken(token);
-			if(user != null) {
+			if (user != null) {
 				user.setPassword(token);
 				response.setUser(user);
 			}
 			return ResponseEntity.ok().body(response);
 		} catch (Exception e) {
 			logger.info("Error en  validarToken: " + e.getMessage());
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El usuario no existe en la base.");
+			return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDTO(this.request.getRequestURL().toString(),
+					null, new Date(), "El nombre de usuario " + request.getUsername() + " no existe ", 404));
 		}
 	}
 
@@ -114,6 +122,7 @@ public class JWTRestController {
 			nuevo.setPassword(encoder.encode(user.getPassword()));
 			nuevo.setAuthority(new HashSet<>());
 			nuevo.getAuthority().add(rol);
+			nuevo.setFechaAlta(new Date());
 			nuevo = repoUser.save(nuevo);
 			response = new ApiResponseDTO(request.getRequestURL().toString(), nuevo.getAuthority(), new Date(), nuevo,
 					200);
@@ -121,7 +130,52 @@ public class JWTRestController {
 		} else {
 			response = new ApiResponseDTO(request.getRequestURL().toString(), null, new Date(),
 					"El nombre de usuario " + user.getUsername() + " ya existe ", 400);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+			return ResponseEntity.status(HttpStatus.OK).body(response);
+		}
+	}
+
+	@RequestMapping(path = "/delete/{idPersona}", produces = { "application/json" })
+	public ResponseEntity<Object> eliminarUsuario(@PathVariable("idPersona") Long idPersona)
+			throws DatoInvalidoException, EntityNotFound {
+		String method = "eliminarUsuario";
+		logger.info(Estados.BEGIN + " " + method);
+		if (idPersona == null) {
+			logger.info(Estados.ERROR + " " + method);
+			throw new DatoInvalidoException("El id del objeto no puede estar vacío");
+		} else {
+			logger.info("Inicio idPersona: " + idPersona);
+			Usuario user = repoUser.findById(idPersona).orElse(null);
+			if (user == null) {
+				logger.info(Estados.ERROR + " " + method + " No existe una persona con id " + idPersona);
+				throw new EntityNotFound("No existe una persona con id " + idPersona);
+			} else {
+				repoUser.delete(user);
+				logger.info(Estados.SUCCES + " " + method);
+				ApiResponseDTO response = new ApiResponseDTO(request.getRequestURL().toString(), null, new Date(),
+						"Usuario eliminado correctamente ", 204);
+				return ResponseEntity.status(HttpStatus.OK).body(response);
+			}
+		}
+	}
+
+	@PutMapping(path = "/edit", consumes = "application/json")
+	public ResponseEntity<Object> editarUsuario(@Valid @RequestBody JWTRequestToken usuario)
+			throws DatoInvalidoException, ErrorInternoException, EntityNotFound {
+		logger.info("Inicio nuevoUser: " + usuario.toString());
+		ApiResponseDTO response;
+		Usuario nuevo = repoUser.findByUsername(usuario.getUsername()).orElse(null);
+		if (nuevo != null) {
+			nuevo.setUsername(usuario.getUsername());
+			nuevo.setNombre(usuario.getNombre());
+			nuevo.setApellido(usuario.getApellido());
+			nuevo = repoUser.save(nuevo);
+			response = new ApiResponseDTO(request.getRequestURL().toString(), nuevo.getAuthority(), new Date(), nuevo,
+					200);
+			return ResponseEntity.status(HttpStatus.OK).body(response);
+		} else {
+			response = new ApiResponseDTO(request.getRequestURL().toString(), null, new Date(),
+					"El nombre de usuario " + usuario.getUsername() + " no existe ", 204);
+			return ResponseEntity.status(HttpStatus.OK).body(response);
 		}
 	}
 
